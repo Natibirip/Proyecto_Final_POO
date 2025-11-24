@@ -124,8 +124,9 @@ public class LoginScreen extends JFrame {
             
             // AQUÍ ABRIRÍAS LA VENTANA PRINCIPAL DEL SISTEMA
             // Ejemplo:
-            // MenuPrincipalFrame menu = new MenuPrincipalFrame(usuarioLogueado);
-            // menu.setVisible(true);
+            
+            Principal ventanaPrincipal = new Principal(usuarioLogueado);
+            ventanaPrincipal.setVisible(true);
             
             // Cerramos la ventana de login
             dispose(); 
