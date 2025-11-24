@@ -3,12 +3,12 @@ package modelos;
 import java.io.Serializable;
 
 /**
- * Enum que define los roles disponibles en el sistema.
+ * define los roles disponibles en el sistema.
  */
 public enum RolUsuario implements Serializable {
     ADMINISTRADOR("Administrador con todos los permisos"),
-    SECRETARIA("Secretaria con permisos limitados");
-
+    SECRETARIA("Secretaria con permisos limitados"),
+	MEDICO("medico con permisos limitados");
     private String descripcion;
 
     RolUsuario(String descripcion) {
