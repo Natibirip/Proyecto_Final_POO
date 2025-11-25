@@ -27,6 +27,11 @@ public class Paciente extends Persona implements Serializable {
     private ArrayList<Boolean> listaEstadosVacunas;
     
     private Date fechaRegistro;
+    private Double peso;
+    private Double estatura;
+    private String TipoSangre;
+    private ArrayList<String> Enfermedades;
+    private ArrayList<String> Alergias;
     private boolean perfilCompleto;
     
     /**
@@ -37,20 +42,27 @@ public class Paciente extends Persona implements Serializable {
      * @param fechaNacimiento Fecha de nacimiento
      * @param sexo Sexo del paciente ('M' o 'F')
      */
-    public Paciente(String cedula, String nombre, String telefono, 
-                    Date fechaNacimiento, char sexo) {
-        super(cedula, nombre, telefono, fechaNacimiento, sexo);
-        this.historialConsultas = new ArrayList<>();
-        
-        // Inicializamos las listas paralelas
-        this.listaVacunas = new ArrayList<>();
-        this.listaEstadosVacunas = new ArrayList<>();
-        
-        this.fechaRegistro = new Date(); // Fecha actual
-        this.perfilCompleto = false; // Inicialmente perfil básico
-    }
     
-    // ========== GETTERS Y SETTERS ==========
+    
+    
+
+
+    public Paciente(String cedula, String nombre, String telefono, Date fechaNacimiento, char sexo,
+			 Date fechaRegistro, Double peso, Double estatura, String tipoSangre, boolean perfilCompleto) {
+		super(cedula, nombre, telefono, fechaNacimiento, sexo);
+		historialConsultas =  new ArrayList<>();;
+		listaVacunas = new ArrayList<>();
+		listaEstadosVacunas = new ArrayList<>();
+		this.fechaRegistro = fechaRegistro;// Fecha actual
+		this.peso = peso;
+		this.estatura = estatura;
+		TipoSangre = tipoSangre;
+		Enfermedades = new ArrayList<>();
+		Alergias = new ArrayList<>();
+		this.perfilCompleto = false;// Inicialmente perfil básico
+	}
+
+	// ========== GETTERS Y SETTERS ==========
     
     public ArrayList<Consulta> getHistorialConsultas() {
         // Retornar copia para proteger la lista interna (opcional, pero buena práctica)
@@ -83,9 +95,74 @@ public class Paciente extends Persona implements Serializable {
         this.perfilCompleto = perfilCompleto;
     }
     
+    
     // ========== MÉTODOS DE NEGOCIO ==========
     
-    /**
+    public Double getPeso() {
+		return peso;
+	}
+
+	public void setPeso(Double peso) {
+		this.peso = peso;
+	}
+
+	public Double getEstatura() {
+		return estatura;
+	}
+
+	public void setEstatura(Double estatura) {
+		this.estatura = estatura;
+	}
+
+	public String getTipoSangre() {
+		return TipoSangre;
+	}
+
+	public void setTipoSangre(String tipoSangre) {
+		TipoSangre = tipoSangre;
+	}
+
+	public ArrayList<String> getEnfermedades() {
+		return Enfermedades;
+	}
+
+	public void setEnfermedades(ArrayList<String> enfermedades) {
+		Enfermedades = enfermedades;
+	}
+
+	public ArrayList<String> getAlergias() {
+		return Alergias;
+	}
+
+	public void setAlergias(ArrayList<String> alergias) {
+		Alergias = alergias;
+	}
+	
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setHistorialConsultas(ArrayList<Consulta> historialConsultas) {
+		this.historialConsultas = historialConsultas;
+	}
+
+	public void setListaVacunas(ArrayList<Vacuna> listaVacunas) {
+		this.listaVacunas = listaVacunas;
+	}
+
+	public void setListaEstadosVacunas(ArrayList<Boolean> listaEstadosVacunas) {
+		this.listaEstadosVacunas = listaEstadosVacunas;
+	}
+
+	public void agregarAlergia(String alergia) {
+		Alergias.add(alergia);
+	}
+	
+	public void agregarEnfermedad(String Enfermedad) {
+		Enfermedades.add(Enfermedad);
+	}
+	/**
      * Agrega una consulta al historial del paciente
      * * @param consulta Consulta a agregar
      * @return true si se agregó exitosamente, false en caso contrario
