@@ -3,6 +3,7 @@ package controlador;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 // Importamos tus modelos (ajusta los nombres de paquetes si es necesario)
 import modelos.*;
@@ -24,8 +25,8 @@ public class ClinicaControladora implements Serializable {
     private ArrayList<Consulta> consultas;
     private ArrayList<Cita> citas;
     private ArrayList<Vacuna> inventarioVacunas;
-    // Si tienes una clase Enfermedad para vigilancia
-    // private ArrayList<Enfermedad> enfermedadesVigiladas; 
+    // AGREGAR: Lista de enfermedades vigiladas
+    private ArrayList<Enfermedad> enfermedadesVigiladas;
 
     // --- CONSTRUCTOR PRIVADO ---
     private ClinicaControladora() {
@@ -38,6 +39,8 @@ public class ClinicaControladora implements Serializable {
         this.consultas = new ArrayList<>();
         this.citas = new ArrayList<>();
         this.inventarioVacunas = new ArrayList<>();
+        // AGREGAR: Inicializar lista de enfermedades
+        this.enfermedadesVigiladas = new ArrayList<>();
         
         // Verificar si necesitamos el usuario por defecto
         inicializarDatosPorDefecto();
@@ -144,6 +147,130 @@ public class ClinicaControladora implements Serializable {
         // al historial del paciente si la clase Paciente tiene una lista interna.
     }
 
+    // ==========================================
+    // GESTIÓN DE VACUNAS (MÉTODOS NUEVOS)
+    // ==========================================
+
+    public boolean agregarVacuna(Vacuna v) {
+        if (v == null || !v.esValida()) {
+            return false;
+        }
+        
+        // Verificar que no exista ya
+        if (buscarVacuna(v.getCodigo()) != null) {
+            return false;
+        }
+        
+        return inventarioVacunas.add(v);
+    }
+    
+    public boolean eliminarVacuna(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            return false;
+        }
+        
+        Vacuna vacuna = buscarVacuna(codigo);
+        if (vacuna != null) {
+            return inventarioVacunas.remove(vacuna);
+        }
+        return false;
+    }
+    
+    public boolean modificarVacuna(String codigo, Vacuna nuevaVacuna) {
+        if (codigo == null || nuevaVacuna == null || !nuevaVacuna.esValida()) {
+            return false;
+        }
+        
+        Vacuna vacunaExistente = buscarVacuna(codigo);
+        if (vacunaExistente == null) {
+            return false;
+        }
+        
+        // Si el código cambió, verificar que el nuevo no exista
+        if (!codigo.equals(nuevaVacuna.getCodigo())) {
+            if (buscarVacuna(nuevaVacuna.getCodigo()) != null) {
+                return false;
+            }
+        }
+        
+        // Eliminar la antigua y agregar la nueva
+        eliminarVacuna(codigo);
+        return agregarVacuna(nuevaVacuna);
+    }
+    
+    public List<Vacuna> obtenerVacunas() {
+        return new ArrayList<>(inventarioVacunas); // Copia defensiva
+    }
+    
+    public Vacuna buscarVacuna(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            return null;
+        }
+        
+        for (Vacuna v : inventarioVacunas) {
+            if (v.getCodigo().equals(codigo)) {
+                return v;
+            }
+        }
+        return null;
+    }
+
+    // ==========================================
+    // GESTIÓN DE ENFERMEDADES (MÉTODOS NUEVOS)
+    // ==========================================
+
+    public boolean agregarEnfermedad(Enfermedad e) {
+        if (e == null || !e.esValida()) {
+            return false;
+        }
+        
+        // Verificar que no exista ya
+        if (buscarEnfermedad(e.getCodigo()) != null) {
+            return false;
+        }
+        
+        return enfermedadesVigiladas.add(e);
+    }
+    
+    public boolean eliminarEnfermedad(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            return false;
+        }
+        
+        Enfermedad enfermedad = buscarEnfermedad(codigo);
+        if (enfermedad != null) {
+            return enfermedadesVigiladas.remove(enfermedad);
+        }
+        return false;
+    }
+    
+    public List<Enfermedad> obtenerEnfermedades() {
+        return new ArrayList<>(enfermedadesVigiladas);
+    }
+    
+    public List<Enfermedad> obtenerEnfermedadesVigiladas() {
+        List<Enfermedad> vigiladas = new ArrayList<>();
+        for (Enfermedad e : enfermedadesVigiladas) {
+            if (e.isEsVigilada() && e.isActiva()) {
+                vigiladas.add(e);
+            }
+        }
+        return vigiladas;
+    }
+    
+    public Enfermedad buscarEnfermedad(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            return null;
+        }
+        
+        for (Enfermedad e : enfermedadesVigiladas) {
+            if (e.getCodigo().equals(codigo)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
     // Método para forzar el guardado (si implementamos persistencia luego)
     public void guardarDatos() {
         // Lógica de Serialización aquí (ObjectOutputStream)
@@ -152,6 +279,10 @@ public class ClinicaControladora implements Serializable {
     public void cargarDatos() {
         // Lógica de Deserialización aquí (ObjectInputStream)
     }
+
+    // ==========================================
+    // GETTERS (AGREGAR EL NUEVO GETTER)
+    // ==========================================
 
 	public ArrayList<Usuario> getUsuarios() {
 		return usuarios;
@@ -183,5 +314,10 @@ public class ClinicaControladora implements Serializable {
 
 	public ArrayList<Vacuna> getInventarioVacunas() {
 		return inventarioVacunas;
+	}
+	
+	// AGREGAR: Getter para enfermedades vigiladas
+	public ArrayList<Enfermedad> getEnfermedadesVigiladas() {
+	    return enfermedadesVigiladas;
 	}
 }
