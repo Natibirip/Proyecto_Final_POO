@@ -27,6 +27,8 @@ public class ClinicaControladora implements Serializable {
     private ArrayList<Vacuna> inventarioVacunas;
     // AGREGAR: Lista de enfermedades vigiladas
     private ArrayList<Enfermedad> enfermedadesVigiladas;
+    private ArrayList<String> listaEspecialidades;
+    
 
     // --- CONSTRUCTOR PRIVADO ---
     private ClinicaControladora() {
@@ -41,9 +43,10 @@ public class ClinicaControladora implements Serializable {
         this.inventarioVacunas = new ArrayList<>();
         // AGREGAR: Inicializar lista de enfermedades
         this.enfermedadesVigiladas = new ArrayList<>();
-        
+        this.listaEspecialidades = new ArrayList<>();
         // Verificar si necesitamos el usuario por defecto
         inicializarDatosPorDefecto();
+        cargarEspecialidadesPorDefecto();
     }
 
     // --- MÉTODO PARA OBTENER LA INSTANCIA (SINGLETON) ---
@@ -282,6 +285,41 @@ public class ClinicaControladora implements Serializable {
         return null;
     }
 
+    
+    private void cargarEspecialidadesPorDefecto() {
+        listaEspecialidades.add("Medicina General");
+        listaEspecialidades.add("Pediatría");
+        listaEspecialidades.add("Cardiología");
+        listaEspecialidades.add("Ginecología");
+        listaEspecialidades.add("Dermatología");
+        listaEspecialidades.add("Ortopedia");
+        listaEspecialidades.add("Neurología");
+        listaEspecialidades.add("Oftalmología");
+        // Agrega las que necesites
+    }
+    
+    public void agregarEspecialidad(String nuevaEspecialidad) {
+        if (nuevaEspecialidad == null || nuevaEspecialidad.trim().isEmpty()) {
+            return;
+        }
+        
+        String nueva = nuevaEspecialidad.trim();
+        boolean existe = false;
+        
+        // Verificar si ya existe (sin streams, usando for simple)
+        for (int i = 0; i < listaEspecialidades.size(); i++) {
+            if (listaEspecialidades.get(i).equalsIgnoreCase(nueva)) {
+                existe = true;
+                break;
+            }
+        }
+        
+        if (!existe) {
+            this.listaEspecialidades.add(nueva);
+            System.out.println("Nueva especialidad registrada en el sistema: " + nueva);
+        }
+    }
+    
     // Método para forzar el guardado (si implementamos persistencia luego)
     public void guardarDatos() {
         // Lógica de Serialización aquí (ObjectOutputStream)
@@ -330,5 +368,9 @@ public class ClinicaControladora implements Serializable {
 	// AGREGAR: Getter para enfermedades vigiladas
 	public ArrayList<Enfermedad> getEnfermedadesVigiladas() {
 	    return enfermedadesVigiladas;
+	}
+	
+	public ArrayList<String> getListaEspecialidades() {
+	    return listaEspecialidades;
 	}
 }
