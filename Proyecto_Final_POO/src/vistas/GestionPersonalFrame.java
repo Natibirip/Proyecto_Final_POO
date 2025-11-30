@@ -11,26 +11,31 @@ public class GestionPersonalFrame extends JFrame {
 
     private JTable tablaPersonal;
     private DefaultTableModel modeloTabla;
-    private JComboBox<String> cmbFiltroTipo; // Para ver "Todos", "Medicos", "Secretarias"
+    private JComboBox<String> cmbFiltroTipo; // Variable de clase
 
     public GestionPersonalFrame() {
         setTitle("Gestión de Personal Médico y Administrativo");
         setSize(900, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
+        getContentPane().setLayout(new BorderLayout());
 
         // --- BARRA SUPERIOR (Filtro) ---
         JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelSuperior.add(new JLabel("Filtrar por:"));
-        cmbFiltroTipo = new JComboBox<>(new String[]{"Todos", "Médicos", "Secretarias"});
-        panelSuperior.add(cmbFiltroTipo);
+        
+        // CORRECCIÓN 1: Inicializamos la variable de clase, NO creamos una nueva
+        cmbFiltroTipo = new JComboBox<>();
+        // Aseguramos que los textos coincidan con los IF de abajo ("Médicos", "Secretarias")
+        cmbFiltroTipo.setModel(new DefaultComboBoxModel<>(new String[] {"Todos", "Médicos", "Secretarias"}));
         
         JButton btnFiltrar = new JButton("Actualizar Lista");
         btnFiltrar.addActionListener(e -> cargarTabla());
+        
+        panelSuperior.add(cmbFiltroTipo);
         panelSuperior.add(btnFiltrar);
         
-        add(panelSuperior, BorderLayout.NORTH);
+        getContentPane().add(panelSuperior, BorderLayout.NORTH);
 
         // --- TABLA ---
         String[] columnas = {"Tipo", "Cédula", "Nombre", "Teléfono", "Dato Extra (Especialidad/Puesto)"};
@@ -38,7 +43,7 @@ public class GestionPersonalFrame extends JFrame {
             public boolean isCellEditable(int row, int col) { return false; }
         };
         tablaPersonal = new JTable(modeloTabla);
-        add(new JScrollPane(tablaPersonal), BorderLayout.CENTER);
+        getContentPane().add(new JScrollPane(tablaPersonal), BorderLayout.CENTER);
 
         // --- BOTONES ---
         JPanel panelBotones = new JPanel();
@@ -51,42 +56,53 @@ public class GestionPersonalFrame extends JFrame {
         panelBotones.add(btnNuevo);
         panelBotones.add(btnEliminar);
         panelBotones.add(btnCerrar);
-        add(panelBotones, BorderLayout.SOUTH);
+        getContentPane().add(panelBotones, BorderLayout.SOUTH);
 
         // --- ACCIONES ---
         btnCerrar.addActionListener(e -> dispose());
         
         btnNuevo.addActionListener(e -> {
-            // Abrir el diálogo de registro
             RegPersonalDialog dialogo = new RegPersonalDialog(this);
             dialogo.setVisible(true);
-            cargarTabla(); // Refrescar al volver
+            cargarTabla(); 
         });
 
-        // Cargar datos iniciales
         cargarTabla();
     }
 
     private void cargarTabla() {
-        modeloTabla.setRowCount(0);
+        modeloTabla.setRowCount(0); // Limpiar la tabla
         ClinicaControladora control = ClinicaControladora.getInstance();
+        
+        // Validación de seguridad para el filtro
         String filtro = (String) cmbFiltroTipo.getSelectedItem();
+        if (filtro == null) filtro = "Todos";
+
+      
 
         // 1. Cargar Médicos
         if (filtro.equals("Todos") || filtro.equals("Médicos")) {
-            for (Medico m : control.getMedicos()) { 
-                modeloTabla.addRow(new Object[]{
-                    "MÉDICO", m.getCedula(), m.getNombre(), m.getTelefono(), m.getEspecialidad()
-                });
+            ArrayList<Medico> listaMedicos = control.getMedicos();
+            // Solo entramos al bucle si la lista NO es null y NO está vacía
+            if (listaMedicos != null && !listaMedicos.isEmpty()) {
+                for (Medico m : listaMedicos) { 
+                    modeloTabla.addRow(new Object[]{
+                        "MÉDICO", m.getCedula(), m.getNombre(), m.getTelefono(), m.getEspecialidad()
+                    });
+                }
             }
         }
 
         // 2. Cargar Secretarias
         if (filtro.equals("Todos") || filtro.equals("Secretarias")) {
-            for (Secretaria s : control.getSecretarias()) { 
-                modeloTabla.addRow(new Object[]{
-                    "SECRETARIA", s.getCedula(), s.getNombre(), s.getTelefono(), "Administrativo"
-                });
+            ArrayList<Secretaria> listaSecretarias = control.getSecretarias();
+            // Solo entramos al bucle si la lista NO es null y NO está vacía
+            if (listaSecretarias != null && !listaSecretarias.isEmpty()) {
+                for (Secretaria s : listaSecretarias) { 
+                    modeloTabla.addRow(new Object[]{
+                        "SECRETARIA", s.getCedula(), s.getNombre(), s.getTelefono(), "Administrativo"
+                    });
+                }
             }
         }
     }

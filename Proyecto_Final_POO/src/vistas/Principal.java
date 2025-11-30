@@ -129,8 +129,14 @@ public class Principal extends JFrame {
         menuBar.add(menuVacunas);
         menuBar.add(menuAdministracion);
         
-        JMenuItem menuItem = new JMenuItem("Gestionar Usuarios y Roles");
-        menuAdministracion.add(menuItem);
+        JMenuItem mntmGestionarPersonal = new JMenuItem("Gestionar Personal");
+        mntmGestionarPersonal.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		GestionPersonalFrame ventanaPersonal = new GestionPersonalFrame();
+                ventanaPersonal.setVisible(true);
+        	}
+        });
+        menuAdministracion.add(mntmGestionarPersonal);
 
         setJMenuBar(menuBar);
     }
