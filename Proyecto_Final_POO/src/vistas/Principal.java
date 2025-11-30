@@ -67,10 +67,19 @@ public class Principal extends JFrame {
         // --- MENU PACIENTES (Accesible para todos, pero con diferencias internas) ---
         JMenu menuPacientes = new JMenu("Pacientes");
         JMenuItem itemNuevoPaciente = new JMenuItem("Registrar Paciente");
+        itemNuevoPaciente.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		RegClientePrt2 ventanaCliente = new RegClientePrt2();
+                ventanaCliente.setVisible(true);
+                //dispose();
+        	}
+        });
         JMenuItem itemBuscarPaciente = new JMenuItem("Buscar / Editar Paciente");
         
         // Acciones (Stubs por ahora)
-        itemNuevoPaciente.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir Registro Paciente"));
+        //itemNuevoPaciente.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir Registro Paciente"));
+        
+        
         itemBuscarPaciente.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir Buscador Paciente"));
 
         menuPacientes.add(itemNuevoPaciente);
@@ -103,6 +112,12 @@ public class Principal extends JFrame {
         // --- MENU ADMINISTRACIÓN (Solo Admin) ---
         menuAdministracion = new JMenu("Administración");
         itemGestionarUsuarios = new JMenuItem("Gestionar Usuarios y Roles");
+        itemGestionarUsuarios.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		GestionUsuariosFrame ventanaUsuarios = new GestionUsuariosFrame();
+                ventanaUsuarios.setVisible(true);
+        	}
+        });
         
         menuAdministracion.add(itemGestionarUsuarios);
 
@@ -113,6 +128,9 @@ public class Principal extends JFrame {
         menuBar.add(menuConsultas);
         menuBar.add(menuVacunas);
         menuBar.add(menuAdministracion);
+        
+        JMenuItem menuItem = new JMenuItem("Gestionar Usuarios y Roles");
+        menuAdministracion.add(menuItem);
 
         setJMenuBar(menuBar);
     }

@@ -1,254 +1,289 @@
 package vistas;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import controlador.ClinicaControladora;
-import modelos.Paciente;
-
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
+
+import controlador.ClinicaControladora; // Verifica que este import sea correcto
+import modelos.Paciente;
 
 public class RegClientePrt2 extends JDialog {
 
-	private final JPanel contentPanel = new JPanel();
-	private JRadioButton rdbtnNingunaA;
-	private JRadioButton rdbtnAPolen;
-	private JRadioButton rdbtnAAcaros;
-	private JRadioButton rdbtnApelaje;
-	private JRadioButton rdbtnAmani;
-	private JRadioButton rdbtnAnueses;
-	private JRadioButton rdbtnAabejas;
-	private JRadioButton rdbtnNingunaE;
-	private JRadioButton rdbtnEanemia;
-	private JRadioButton rdbtnEhemofilia;
-	private JRadioButton rdbtnEdistroMuscular;
-	private JRadioButton rdbtnEtalasemia;
-	private JRadioButton rdbtnEfibrosis;
-	private JRadioButton rdbtnEhipercolesterol;
-	private JComboBox cbxSangre;
-	private JTextField txtAltura;
-	private JTextField txtPeso;
-	private JTextField txtalergiasExtra;
-	private JTextField txtenfermedadesExtra;
+    private final JPanel contentPanel = new JPanel();
+    
+    // --- CAMPOS ---
+    private JTextField txtNombre;
+    private JTextField txtCedula;
+    private JTextField txtTelefono;
+    private JFormattedTextField txtFechaNac; 
+    private JComboBox<String> cmbSexo; // <--- NUEVO CAMPO NECESARIO
+    
+    private JRadioButton rdbtnNingunaA, rdbtnAPolen, rdbtnAAcaros, rdbtnApelaje, rdbtnAmani, rdbtnAnueses, rdbtnAabejas;
+    private JRadioButton rdbtnNingunaE, rdbtnEanemia, rdbtnEhemofilia, rdbtnEdistroMuscular, rdbtnEtalasemia, rdbtnEfibrosis, rdbtnEhipercolesterol;
+    private JComboBox<String> cbxSangre;
+    private JTextField txtAltura;
+    private JTextField txtPeso;
+    private JTextField txtalergiasExtra;
+    private JTextField txtenfermedadesExtra;
+    private JComboBox boxSexo;
+    private JComboBox boxSangre;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(Paciente p1) {
-		try {
-			RegClientePrt2 dialog = new RegClientePrt2(p1);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    public static void main(String[] args) {
+        try {
+            // Ahora esto funciona porque Paciente ya tiene constructor vacío
+            RegClientePrt2 dialog = new RegClientePrt2();
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * Create the dialog.
-	 */
-	public RegClientePrt2(Paciente p1) {
-		setBounds(100, 100, 450, 300);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new BorderLayout(0, 0));
-		{
-			JPanel panel = new JPanel();
-			contentPanel.add(panel, BorderLayout.CENTER);
-			panel.setLayout(null);
-			
-			JLabel lblNewLabel = new JLabel("Tipo de Sangre:");
-			lblNewLabel.setBounds(10, 11, 91, 14);
-			panel.add(lblNewLabel);
-			
-			cbxSangre = new JComboBox();
-			cbxSangre.setModel(new DefaultComboBoxModel (new String[] {"<Seleccione>", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-","Golden Blood"}));
-			cbxSangre.setBounds(10, 30, 109, 20);
-			panel.add(cbxSangre);
-			
-			JLabel lblNewLabel_1 = new JLabel("Altura:");
-			lblNewLabel_1.setBounds(10, 79, 46, 14);
-			panel.add(lblNewLabel_1);
-			
-			JLabel lblPeso = new JLabel("Peso:");
-			lblPeso.setBounds(10, 147, 46, 14);
-			panel.add(lblPeso);
-			
-			txtAltura = new JTextField();
-			txtAltura.setBounds(10, 99, 55, 20);
-			panel.add(txtAltura);
-			txtAltura.setColumns(10);
-			
-			txtPeso = new JTextField();
-			txtPeso.setBounds(10, 163, 55, 20);
-			panel.add(txtPeso);
-			txtPeso.setColumns(10);
-			
-			JLabel lblNewLabel_3 = new JLabel("Enfermedades Heredadas:");
-			lblNewLabel_3.setBounds(276, 11, 138, 14);
-			panel.add(lblNewLabel_3);
-			
-			JLabel lblNewLabel_4 = new JLabel("Alergias:");
-			lblNewLabel_4.setBounds(123, 11, 127, 14);
-			panel.add(lblNewLabel_4);
-			
-			rdbtnAPolen = new JRadioButton("Polen");
-			rdbtnAPolen.setBounds(123, 52, 75, 23);
-			panel.add(rdbtnAPolen);
-			
-			rdbtnAAcaros = new JRadioButton("Acaros");
-			rdbtnAAcaros.setBounds(123, 75, 66, 23);
-			panel.add(rdbtnAAcaros);
-			
-			rdbtnApelaje = new JRadioButton("Pelaje Animal");
-			rdbtnApelaje.setBounds(123, 98, 109, 23);
-			panel.add(rdbtnApelaje);
-			
-			rdbtnNingunaA = new JRadioButton("Ninguna");
-			rdbtnNingunaA.setBounds(123, 29, 75, 23);
-			panel.add(rdbtnNingunaA);
-			
-			rdbtnAmani = new JRadioButton("Mani");
-			rdbtnAmani.setBounds(123, 120, 109, 23);
-			panel.add(rdbtnAmani);
-			
-			rdbtnAnueses = new JRadioButton("Nueses");
-			rdbtnAnueses.setBounds(123, 143, 109, 23);
-			panel.add(rdbtnAnueses);
-			
-			rdbtnAabejas = new JRadioButton("Abejas");
-			rdbtnAabejas.setBounds(123, 162, 109, 23);
-			panel.add(rdbtnAabejas);
-			
-			txtalergiasExtra = new JTextField();
-			txtalergiasExtra.setBounds(128, 187, 128, 20);
-			txtalergiasExtra.setText("Extra...");
-			panel.add(txtalergiasExtra);
-			txtalergiasExtra.setColumns(10);
-			
-			rdbtnEfibrosis = new JRadioButton("Fibrosis");
-			rdbtnEfibrosis.setBounds(276, 143, 109, 23);
-			panel.add(rdbtnEfibrosis);
-			
-			rdbtnEanemia = new JRadioButton("Anemia");
-			rdbtnEanemia.setBounds(276, 52, 109, 23);
-			panel.add(rdbtnEanemia);
-			
-			rdbtnEhemofilia = new JRadioButton("Hemofilia");
-			rdbtnEhemofilia.setBounds(276, 75, 109, 23);
-			panel.add(rdbtnEhemofilia);
-			
-			rdbtnEdistroMuscular = new JRadioButton("Distrofia muscular");
-			rdbtnEdistroMuscular.setBounds(276, 98, 138, 23);
-			panel.add(rdbtnEdistroMuscular);
-			
-			rdbtnEtalasemia = new JRadioButton("Talasemia");
-			rdbtnEtalasemia.setBounds(276, 120, 109, 23);
-			panel.add(rdbtnEtalasemia);
-			
-			rdbtnEhipercolesterol = new JRadioButton("Hipercolesterolemia");
-			rdbtnEhipercolesterol.setBounds(276, 162, 138, 23);
-			panel.add(rdbtnEhipercolesterol);
-			
-			txtenfermedadesExtra = new JTextField();
-			txtenfermedadesExtra.setBounds(276, 187, 128, 20);
-			txtenfermedadesExtra.setText("Extra...");
-			panel.add(txtenfermedadesExtra);
-			txtenfermedadesExtra.setColumns(10);
-			
-			rdbtnNingunaE = new JRadioButton("Ninguna");
-			rdbtnNingunaE.setBounds(276, 29, 109, 23);
-			panel.add(rdbtnNingunaE);
-		}
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton Registrar = new JButton("Registrar");
-				Registrar.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						p1.setTipoSangre(cbxSangre.getSelectedObjects().toString());
-						p1.setEstatura(Double.parseDouble(txtAltura.getText()));
-						p1.setPeso(Double.parseDouble(txtPeso.getText()));
-						if(rdbtnNingunaA.isSelected()) {
-							p1.agregarAlergia(rdbtnNingunaA.getText().toString());
-						}
-						else if(rdbtnNingunaA.isSelected() == false){
-							if(rdbtnAPolen.isSelected()) {
-								p1.agregarAlergia(rdbtnAPolen.getText().toString());
-							}
-							if(rdbtnAAcaros.isSelected()) {
-								p1.agregarAlergia(rdbtnAAcaros.getText().toString());
-							}
-							if(rdbtnApelaje.isSelected()) {
-								p1.agregarAlergia(rdbtnApelaje.getText().toString());
-							}
-							if(rdbtnAmani.isSelected()) {
-								p1.agregarAlergia(rdbtnAmani.getText().toString());
-							}
-							if(rdbtnAnueses.isSelected()) {
-								p1.agregarAlergia(rdbtnAnueses.getText().toString());
-							}
-							if(rdbtnAabejas.isSelected()) {
-								p1.agregarAlergia(rdbtnAabejas.getText().toString());
-							}
-							if(txtalergiasExtra.getText() != "Extra...") {
-								p1.agregarAlergia(txtalergiasExtra.getText().toString());
-							}
-						}
-						if(rdbtnNingunaE.isSelected()) {
-							p1.agregarEnfermedad(rdbtnNingunaE.getText().toString());
-						}
-						else if(rdbtnNingunaE.isSelected() == false){
-							if(rdbtnEanemia.isSelected()) {
-								p1.agregarEnfermedad(rdbtnEanemia.getText().toString());								
-							}
-							if(rdbtnEhemofilia.isSelected()) {
-								p1.agregarEnfermedad(rdbtnEhemofilia.getText().toString());								
-							}
-							if(rdbtnEdistroMuscular.isSelected()) {
-								p1.agregarEnfermedad(rdbtnEdistroMuscular.getText().toString());								
-							}
-							if(rdbtnEtalasemia.isSelected()) {
-								p1.agregarEnfermedad(rdbtnEtalasemia.getText().toString());								
-							}
-							if(rdbtnEfibrosis.isSelected()) {
-								p1.agregarEnfermedad(rdbtnEfibrosis.getText().toString());								
-							}
-							if(rdbtnEhipercolesterol.isSelected()) {
-								p1.agregarEnfermedad(rdbtnEhipercolesterol.getText().toString());								
-							}
-							if(txtenfermedadesExtra.getText() != "Extra...") {
-								p1.agregarAlergia(txtenfermedadesExtra.getText().toString());
-							}
-						}
-						
-						ClinicaControladora.getInstance().registrarPaciente(p1);
-					}
-				});
-				Registrar.setActionCommand("OK");
-				buttonPane.add(Registrar);
-				getRootPane().setDefaultButton(Registrar);
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
-			}
-		}
-	}
-	
+    public RegClientePrt2() {
+        // Configuración Ventana
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds(0, 0, 1024, 720);
+        setResizable(false);
+        setTitle("Registro de Paciente");
+        
+        getContentPane().setLayout(new BorderLayout());
+        contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        getContentPane().add(contentPanel, BorderLayout.CENTER);
+        contentPanel.setLayout(null);
+
+        // --- DATOS PERSONALES ---
+        JLabel lblDatos = new JLabel("--- DATOS PERSONALES ---");
+        lblDatos.setBounds(10, 10, 200, 20);
+        contentPanel.add(lblDatos);
+
+        // Nombre
+        JLabel lblNombre = new JLabel("Nombre Completo:");
+        lblNombre.setBounds(10, 40, 120, 14);
+        contentPanel.add(lblNombre);
+        txtNombre = new JTextField();
+        txtNombre.setBounds(10, 60, 200, 20);
+        contentPanel.add(txtNombre);
+        
+        // Cédula
+        JLabel lblCedula = new JLabel("Cédula:");
+        lblCedula.setBounds(230, 40, 120, 14);
+        contentPanel.add(lblCedula);
+        txtCedula = new JTextField();
+        txtCedula.setBounds(230, 60, 150, 20);
+        txtCedula.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                if (!Character.isDigit(e.getKeyChar())) e.consume();
+            }
+        });
+        contentPanel.add(txtCedula);
+
+        // Teléfono
+        JLabel lblTelefono = new JLabel("Teléfono:");
+        lblTelefono.setBounds(400, 40, 120, 14);
+        contentPanel.add(lblTelefono);
+        txtTelefono = new JTextField();
+        txtTelefono.setBounds(400, 60, 150, 20);
+        txtTelefono.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                if (!Character.isDigit(e.getKeyChar())) e.consume();
+            }
+        });
+        contentPanel.add(txtTelefono);
+
+        // Fecha Nacimiento
+        JLabel lblFecha = new JLabel("Fecha Nac. (dd/mm/yyyy):");
+        lblFecha.setBounds(570, 40, 180, 14);
+        contentPanel.add(lblFecha);
+        try {
+            MaskFormatter formatoFecha = new MaskFormatter("##/##/####");
+            formatoFecha.setPlaceholderCharacter('_');
+            txtFechaNac = new JFormattedTextField(formatoFecha);
+            txtFechaNac.setBounds(570, 60, 100, 20);
+            contentPanel.add(txtFechaNac);
+        } catch (ParseException e) { e.printStackTrace(); }
+
+        // Sexo (AGREGADO)
+        JLabel lblSexo = new JLabel("Sexo:");
+        lblSexo.setBounds(755, 40, 100, 14);
+        contentPanel.add(lblSexo);
+        
+
+        // --- DATOS FISICOS ---
+        int yOffset = 100;
+        JLabel lblFisicos = new JLabel("--- DATOS MÉDICOS ---");
+        lblFisicos.setBounds(10, yOffset, 200, 20);
+        contentPanel.add(lblFisicos);
+
+        JLabel lblSangre = new JLabel("Tipo de Sangre:");
+        lblSangre.setBounds(10, 126, 120, 23);
+        contentPanel.add(lblSangre);
+        
+        JLabel lblAltura = new JLabel("Altura (m):");
+        lblAltura.setBounds(10, yOffset + 80, 80, 14);
+        contentPanel.add(lblAltura);
+        txtAltura = new JTextField();
+        txtAltura.setBounds(10, yOffset + 100, 55, 20);
+        contentPanel.add(txtAltura);
+        
+        JLabel lblPeso = new JLabel("Peso (Lb):");
+        lblPeso.setBounds(80, yOffset + 80, 80, 14);
+        contentPanel.add(lblPeso);
+        txtPeso = new JTextField();
+        txtPeso.setBounds(80, yOffset + 100, 55, 20);
+        contentPanel.add(txtPeso);
+
+        // --- ALERGIAS ---
+        JLabel lblAlergias = new JLabel("Alergias:");
+        lblAlergias.setBounds(200, yOffset + 30, 127, 14);
+        contentPanel.add(lblAlergias);
+        
+        rdbtnNingunaA = new JRadioButton("Ninguna"); rdbtnNingunaA.setBounds(200, yOffset + 50, 100, 23); contentPanel.add(rdbtnNingunaA);
+        rdbtnAPolen = new JRadioButton("Polen"); rdbtnAPolen.setBounds(200, yOffset + 75, 100, 23); contentPanel.add(rdbtnAPolen);
+        rdbtnAAcaros = new JRadioButton("Acaros"); rdbtnAAcaros.setBounds(200, yOffset + 100, 100, 23); contentPanel.add(rdbtnAAcaros);
+        rdbtnApelaje = new JRadioButton("Pelaje"); rdbtnApelaje.setBounds(200, yOffset + 125, 100, 23); contentPanel.add(rdbtnApelaje);
+        rdbtnAmani = new JRadioButton("Mani"); rdbtnAmani.setBounds(200, yOffset + 150, 100, 23); contentPanel.add(rdbtnAmani);
+        rdbtnAnueses = new JRadioButton("Nueces"); rdbtnAnueses.setBounds(200, yOffset + 175, 100, 23); contentPanel.add(rdbtnAnueses);
+        rdbtnAabejas = new JRadioButton("Abejas"); rdbtnAabejas.setBounds(200, yOffset + 200, 100, 23); contentPanel.add(rdbtnAabejas);
+        
+        txtalergiasExtra = new JTextField("Extra...");
+        txtalergiasExtra.setBounds(200, yOffset + 230, 128, 20);
+        contentPanel.add(txtalergiasExtra);
+
+        // --- ENFERMEDADES ---
+        JLabel lblEnfermedades = new JLabel("Enfermedades Heredadas:");
+        lblEnfermedades.setBounds(400, yOffset + 30, 180, 14);
+        contentPanel.add(lblEnfermedades);
+        
+        rdbtnNingunaE = new JRadioButton("Ninguna"); rdbtnNingunaE.setBounds(400, yOffset + 50, 109, 23); contentPanel.add(rdbtnNingunaE);
+        rdbtnEanemia = new JRadioButton("Anemia"); rdbtnEanemia.setBounds(400, yOffset + 75, 109, 23); contentPanel.add(rdbtnEanemia);
+        rdbtnEhemofilia = new JRadioButton("Hemofilia"); rdbtnEhemofilia.setBounds(400, yOffset + 100, 109, 23); contentPanel.add(rdbtnEhemofilia);
+        rdbtnEdistroMuscular = new JRadioButton("Distrofia"); rdbtnEdistroMuscular.setBounds(400, yOffset + 125, 138, 23); contentPanel.add(rdbtnEdistroMuscular);
+        rdbtnEtalasemia = new JRadioButton("Talasemia"); rdbtnEtalasemia.setBounds(400, yOffset + 150, 109, 23); contentPanel.add(rdbtnEtalasemia);
+        rdbtnEfibrosis = new JRadioButton("Fibrosis"); rdbtnEfibrosis.setBounds(400, yOffset + 175, 109, 23); contentPanel.add(rdbtnEfibrosis);
+        rdbtnEhipercolesterol = new JRadioButton("Hipercolesterol"); rdbtnEhipercolesterol.setBounds(400, yOffset + 200, 138, 23); contentPanel.add(rdbtnEhipercolesterol);
+        
+        txtenfermedadesExtra = new JTextField("Extra...");
+        txtenfermedadesExtra.setBounds(400, yOffset + 230, 128, 20);
+        contentPanel.add(txtenfermedadesExtra);
+        
+        boxSexo = new JComboBox();
+        boxSexo.setModel(new DefaultComboBoxModel(new String[] {"<seleccione>", "Masculino", "Femenino"}));
+        boxSexo.setBounds(755, 60, 109, 22);
+        contentPanel.add(boxSexo);
+        
+        boxSangre = new JComboBox();
+        boxSangre.setModel(new DefaultComboBoxModel(new String[] {"A+", "A-", "B+", "B-", "AB", "O+", "O-"}));
+        boxSangre.setBounds(10, 150, 55, 22);
+        contentPanel.add(boxSangre);
+
+        // --- BOTONES ---
+        JPanel buttonPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        getContentPane().add(buttonPane, BorderLayout.SOUTH);
+        
+        JButton btnRegistrar = new JButton("Registrar Paciente");
+        btnRegistrar.addActionListener(e -> registrar()); // Lógica movida a método separado
+        buttonPane.add(btnRegistrar);
+        
+        JButton btnCancelar = new JButton("Cancelar");
+        btnCancelar.addActionListener(e -> dispose());
+        buttonPane.add(btnCancelar);
+    }
+    
+    // Método para limpiar y organizar la lógica del botón
+    private void registrar() {
+        try {
+            // 1. Validaciones básicas
+            if (txtNombre.getText().isEmpty() || txtCedula.getText().isEmpty() || txtTelefono.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Complete Nombre, Cédula y Teléfono");
+                return;
+            }
+
+            // 2. Parseo de Fecha
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            sdf.setLenient(false);
+            Date fechaNac = sdf.parse(txtFechaNac.getText());
+            
+            // 3. Obtener Sexo
+            char sexo = boxSexo.getSelectedItem().toString().charAt(0);
+
+            // 4. CREAR OBJETO PACIENTE (Usando constructor vacío + Setters para evitar errores)
+            Paciente p = new Paciente();
+            p.setNombre(txtNombre.getText());
+            p.setCedula(txtCedula.getText());
+            p.setTelefono(txtTelefono.getText());
+            p.setFechaNacimiento(fechaNac);
+            p.setSexo(sexo);
+            p.setFechaRegistro(new Date());
+
+            // 5. Datos Físicos
+            p.setTipoSangre(cbxSangre.getSelectedItem().toString());
+            try {
+                if(!txtAltura.getText().isEmpty()) p.setEstatura(Double.parseDouble(txtAltura.getText()));
+                if(!txtPeso.getText().isEmpty()) p.setPeso(Double.parseDouble(txtPeso.getText()));
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Altura y Peso deben ser numéricos.");
+                return;
+            }
+
+            // 6. Alergias
+            if(!rdbtnNingunaA.isSelected()){
+                if(rdbtnAPolen.isSelected()) p.agregarAlergia("Polen");
+                if(rdbtnAAcaros.isSelected()) p.agregarAlergia("Acaros");
+                if(rdbtnApelaje.isSelected()) p.agregarAlergia("Pelaje Animal");
+                if(rdbtnAmani.isSelected()) p.agregarAlergia("Mani");
+                if(rdbtnAnueses.isSelected()) p.agregarAlergia("Nueces");
+                if(rdbtnAabejas.isSelected()) p.agregarAlergia("Abejas");
+                String extra = txtalergiasExtra.getText();
+                if(!extra.equals("Extra...") && !extra.isEmpty()) p.agregarAlergia(extra);
+            } else {
+                p.agregarAlergia("Ninguna");
+            }
+
+            // 7. Enfermedades
+            if(!rdbtnNingunaE.isSelected()){
+                if(rdbtnEanemia.isSelected()) p.agregarEnfermedad("Anemia");
+                if(rdbtnEhemofilia.isSelected()) p.agregarEnfermedad("Hemofilia");
+                if(rdbtnEdistroMuscular.isSelected()) p.agregarEnfermedad("Distrofia");
+                if(rdbtnEtalasemia.isSelected()) p.agregarEnfermedad("Talasemia");
+                if(rdbtnEfibrosis.isSelected()) p.agregarEnfermedad("Fibrosis");
+                if(rdbtnEhipercolesterol.isSelected()) p.agregarEnfermedad("Hipercolesterol");
+                String extra = txtenfermedadesExtra.getText();
+                if(!extra.equals("Extra...") && !extra.isEmpty()) p.agregarEnfermedad(extra);
+            } else {
+                p.agregarEnfermedad("Ninguna");
+            }
+
+            // 8. GUARDAR
+            ClinicaControladora.getInstance().registrarPaciente(p);
+            JOptionPane.showMessageDialog(this, "Paciente Registrado Exitosamente");
+            dispose();
+
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(this, "Error en fecha. Use formato dd/mm/yyyy");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+        }
+    }
 }

@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -22,6 +23,7 @@ import controlador.ClinicaControladora;
 import modelos.Medico;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.JComboBox;
 
 public class RegDoctor extends JDialog {
 
@@ -36,7 +38,6 @@ public class RegDoctor extends JDialog {
 	private SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 	private JRadioButton rdbtnMujer;
 	private JRadioButton rdbtnHombre;
-	private JTextField txtEspecialidad;
 	private JSpinner spCitas;
 	/**
 	 * Launch the application.
@@ -154,11 +155,6 @@ public class RegDoctor extends JDialog {
 			lblNewLabel_5.setBounds(207, 99, 80, 14);
 			panel.add(lblNewLabel_5);
 			
-			txtEspecialidad = new JTextField();
-			txtEspecialidad.setBounds(207, 131, 107, 20);
-			panel.add(txtEspecialidad);
-			txtEspecialidad.setColumns(10);
-			
 			JLabel lblNewLabel_6 = new JLabel("Maximo de Citas por dia:");
 			lblNewLabel_6.setBounds(10, 160, 148, 14);
 			panel.add(lblNewLabel_6);
@@ -167,6 +163,10 @@ public class RegDoctor extends JDialog {
 			spCitas.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 			spCitas.setBounds(10, 185, 29, 20);
 			panel.add(spCitas);
+			
+			JComboBox boxEspecialidad = new JComboBox();
+			boxEspecialidad.setBounds(207, 120, 134, 22);
+			panel.add(boxEspecialidad);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -184,7 +184,7 @@ public class RegDoctor extends JDialog {
 				            char sexo;
 				            if(rdbtnHombre.isSelected()) {
 				            	sexo = 'M';
-				            	Medico med = new Medico(txtCedula.getText(), txtNombre.getText(), txtTelefono.getText(), fechaNaci, sexo, txtEspecialidad.getText());
+				            	Medico med = new Medico(txtCedula.getText(), txtNombre.getText(), txtTelefono.getText(), fechaNaci, sexo, especialidad);
 				            	
 				            	int citas = (int) spCitas.getValue();
 				            	med.setCitasPorDia(citas);

@@ -134,12 +134,23 @@ public class ClinicaControladora implements Serializable {
         }
     }
 
-    public void registrarMedico(Medico m) {
-        if (buscarMedicoPorCedula(m.getCedula()) == null) {
-            this.medicos.add(m);
+ // Métodos de Registro
+    public void registrarSecretaria(Secretaria s) {
+        if (s != null) {
+            // Validar que no exista la cédula
+            for(Secretaria existente : secretarias) {
+                if(existente.getCedula().equals(s.getCedula())) return;
+            }
+            this.secretarias.add(s);
+            System.out.println("Secretaria registrada: " + s.getNombre());
         }
     }
 
+    // Asegúrate de tener también el de médicos que vimos antes
+    public void registrarMedico(Medico m) {
+
+        if (m != null) this.medicos.add(m);
+    }
     // Registra consulta y actualiza historiales si es necesario
     public void registrarConsulta(Consulta c) {
         this.consultas.add(c);
