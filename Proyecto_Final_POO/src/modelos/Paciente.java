@@ -53,6 +53,53 @@ public class Paciente extends Persona implements Serializable {
         this.enfermedades = new ArrayList<>();
         this.alergias = new ArrayList<>();
     }
+    
+
+    /**
+     * Agrega una nueva consulta al historial clínico del paciente.
+     */
+    public void agregarConsulta(Consulta nuevaConsulta) {
+        if (this.historialConsultas == null) {
+            this.historialConsultas = new ArrayList<>();
+        }
+        if (nuevaConsulta != null) {
+            this.historialConsultas.add(nuevaConsulta);
+        }
+    }
+
+    /**
+     * Registra o actualiza el estado de una vacuna.
+     * Si la vacuna ya está en la lista, actualiza su estado.
+     * Si no está, la agrega.
+     */
+    public void actualizarVacuna(Vacuna vacuna, boolean aplicada) {
+        if (vacuna == null) return;
+
+        // Inicializar listas si son nulas (seguridad)
+        if (this.listaVacunas == null) this.listaVacunas = new ArrayList<>();
+        if (this.listaEstadosVacunas == null) this.listaEstadosVacunas = new ArrayList<>();
+
+        int indice = -1;
+        
+        // 1. Buscar si la vacuna ya existe en la lista
+        for (int i = 0; i < listaVacunas.size(); i++) {
+            // Usamos equals (comparar por código o nombre)
+            if (listaVacunas.get(i).equals(vacuna)) {
+                indice = i;
+                break;
+            }
+        }
+
+        if (indice != -1) {
+            // 2. Si existe, actualizamos el estado en la lista paralela
+            listaEstadosVacunas.set(indice, aplicada);
+        } else {
+            // 3. Si no existe, agregamos a ambas listas
+            listaVacunas.add(vacuna);
+            listaEstadosVacunas.add(aplicada);
+        }
+    }
+    
 
     // ========== GETTERS Y SETTERS ==========
 

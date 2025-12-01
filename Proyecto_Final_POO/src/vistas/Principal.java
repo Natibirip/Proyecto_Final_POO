@@ -88,7 +88,19 @@ public class Principal extends JFrame {
         // --- MENU CITAS (Secretaria y Médicos) ---
         JMenu menuCitas = new JMenu("Citas");
         JMenuItem itemAgendarCita = new JMenuItem("Agendar Nueva Cita");
+        itemAgendarCita.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		RegCita ventanaCita = new RegCita(null);
+                ventanaCita.setVisible(true);
+        	}
+        });
         JMenuItem itemVerAgenda = new JMenuItem("Ver Agenda");
+        itemVerAgenda.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ListaCitasFrame ventanaListaCita = new ListaCitasFrame(usuarioActual);
+                ventanaListaCita.setVisible(true);
+        	}
+        });
 
         menuCitas.add(itemAgendarCita);
         menuCitas.add(itemVerAgenda);

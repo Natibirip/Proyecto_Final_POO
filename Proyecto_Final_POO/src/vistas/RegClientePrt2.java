@@ -25,19 +25,21 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
-import controlador.ClinicaControladora; // Verifica que este import sea correcto
+import controlador.ClinicaControladora;
 import modelos.Paciente;
 
 public class RegClientePrt2 extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
     
+    // Objeto paciente en proceso (si viene de una cita)
+    private Paciente pacienteEnProceso;
+
     // --- CAMPOS ---
     private JTextField txtNombre;
     private JTextField txtCedula;
     private JTextField txtTelefono;
     private JFormattedTextField txtFechaNac; 
-    private JComboBox<String> cmbSexo; // <--- NUEVO CAMPO NECESARIO
     
     private JRadioButton rdbtnNingunaA, rdbtnAPolen, rdbtnAAcaros, rdbtnApelaje, rdbtnAmani, rdbtnAnueses, rdbtnAabejas;
     private JRadioButton rdbtnNingunaE, rdbtnEanemia, rdbtnEhemofilia, rdbtnEdistroMuscular, rdbtnEtalasemia, rdbtnEfibrosis, rdbtnEhipercolesterol;
@@ -46,32 +48,49 @@ public class RegClientePrt2 extends JDialog {
     private JTextField txtPeso;
     private JTextField txtalergiasExtra;
     private JTextField txtenfermedadesExtra;
-    private JComboBox boxSexo;
-    private JComboBox boxSangre;
+    private JComboBox<String> boxSexo;
 
-    public static void main(String[] args) {
-        try {
-            // Ahora esto funciona porque Paciente ya tiene constructor vacío
-            RegClientePrt2 dialog = new RegClientePrt2();
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            dialog.setVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    /**
+     * Constructor por defecto (para pruebas o registro manual)
+     */
+    public RegClientePrt2() {
+        this(null); // Llama al constructor principal con null
     }
 
-    public RegClientePrt2() {
+    /**
+     * Constructor Principal (Integrado con Flujo de Citas)
+     * @param pacientePrelleno Objeto con Nombre y Cédula ya cargados desde la Cita
+     */
+    public RegClientePrt2(Paciente pacientePrelleno) {
+        this.pacienteEnProceso = pacientePrelleno;
+
         // Configuración Ventana
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(0, 0, 1024, 720);
         setResizable(false);
         setTitle("Registro de Paciente");
+        setModal(true); // Importante para que el flujo de Cita espere
         
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(null);
 
+        inicializarComponentes();
+        
+        // --- PRE-LLENADO AUTOMÁTICO ---
+        if (this.pacienteEnProceso != null) {
+            if (this.pacienteEnProceso.getNombre() != null) {
+                txtNombre.setText(this.pacienteEnProceso.getNombre());
+            }
+            if (this.pacienteEnProceso.getCedula() != null) {
+                txtCedula.setText(this.pacienteEnProceso.getCedula());
+                txtCedula.setEditable(false); // Bloquear cédula para consistencia con la cita
+            }
+        }
+    }
+
+    private void inicializarComponentes() {
         // --- DATOS PERSONALES ---
         JLabel lblDatos = new JLabel("--- DATOS PERSONALES ---");
         lblDatos.setBounds(10, 10, 200, 20);
@@ -123,11 +142,15 @@ public class RegClientePrt2 extends JDialog {
             contentPanel.add(txtFechaNac);
         } catch (ParseException e) { e.printStackTrace(); }
 
-        // Sexo (AGREGADO)
+        // Sexo
         JLabel lblSexo = new JLabel("Sexo:");
         lblSexo.setBounds(755, 40, 100, 14);
         contentPanel.add(lblSexo);
         
+        boxSexo = new JComboBox<>();
+        boxSexo.setModel(new DefaultComboBoxModel<>(new String[] {"<seleccione>", "Masculino", "Femenino"}));
+        boxSexo.setBounds(755, 60, 109, 22);
+        contentPanel.add(boxSexo);
 
         // --- DATOS FISICOS ---
         int yOffset = 100;
@@ -138,6 +161,11 @@ public class RegClientePrt2 extends JDialog {
         JLabel lblSangre = new JLabel("Tipo de Sangre:");
         lblSangre.setBounds(10, 126, 120, 23);
         contentPanel.add(lblSangre);
+        
+        cbxSangre = new JComboBox<>();
+        cbxSangre.setModel(new DefaultComboBoxModel<>(new String[] {"A+", "A-", "B+", "B-", "AB+","AB-", "O+", "O-"}));
+        cbxSangre.setBounds(10, 150, 55, 22);
+        contentPanel.add(cbxSangre);
         
         JLabel lblAltura = new JLabel("Altura (m):");
         lblAltura.setBounds(10, yOffset + 80, 80, 14);
@@ -186,23 +214,13 @@ public class RegClientePrt2 extends JDialog {
         txtenfermedadesExtra = new JTextField("Extra...");
         txtenfermedadesExtra.setBounds(400, yOffset + 230, 128, 20);
         contentPanel.add(txtenfermedadesExtra);
-        
-        boxSexo = new JComboBox();
-        boxSexo.setModel(new DefaultComboBoxModel(new String[] {"<seleccione>", "Masculino", "Femenino"}));
-        boxSexo.setBounds(755, 60, 109, 22);
-        contentPanel.add(boxSexo);
-        
-        boxSangre = new JComboBox();
-        boxSangre.setModel(new DefaultComboBoxModel(new String[] {"A+", "A-", "B+", "B-", "AB", "O+", "O-"}));
-        boxSangre.setBounds(10, 150, 55, 22);
-        contentPanel.add(boxSangre);
 
         // --- BOTONES ---
         JPanel buttonPane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         getContentPane().add(buttonPane, BorderLayout.SOUTH);
         
         JButton btnRegistrar = new JButton("Registrar Paciente");
-        btnRegistrar.addActionListener(e -> registrar()); // Lógica movida a método separado
+        btnRegistrar.addActionListener(e -> registrar()); 
         buttonPane.add(btnRegistrar);
         
         JButton btnCancelar = new JButton("Cancelar");
@@ -210,12 +228,16 @@ public class RegClientePrt2 extends JDialog {
         buttonPane.add(btnCancelar);
     }
     
-    // Método para limpiar y organizar la lógica del botón
     private void registrar() {
         try {
             // 1. Validaciones básicas
             if (txtNombre.getText().isEmpty() || txtCedula.getText().isEmpty() || txtTelefono.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Complete Nombre, Cédula y Teléfono");
+                return;
+            }
+            
+            if (boxSexo.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(this, "Seleccione un sexo válido.");
                 return;
             }
 
@@ -225,10 +247,16 @@ public class RegClientePrt2 extends JDialog {
             Date fechaNac = sdf.parse(txtFechaNac.getText());
             
             // 3. Obtener Sexo
-            char sexo = boxSexo.getSelectedItem().toString().charAt(0);
+            char sexo = boxSexo.getSelectedItem().toString().charAt(0); // 'M' o 'F'
 
-            // 4. CREAR OBJETO PACIENTE (Usando constructor vacío + Setters para evitar errores)
-            Paciente p = new Paciente();
+            // 4. CREAR O ACTUALIZAR OBJETO PACIENTE
+            Paciente p;
+            if (this.pacienteEnProceso != null) {
+                p = this.pacienteEnProceso; // Usar el que venía de la cita
+            } else {
+                p = new Paciente(); // Crear uno nuevo si fue manual
+            }
+            
             p.setNombre(txtNombre.getText());
             p.setCedula(txtCedula.getText());
             p.setTelefono(txtTelefono.getText());

@@ -1,17 +1,8 @@
 package modelos;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
 
-/**
- * Representa una consulta médica entre un paciente y un médico.
- * Incluye información clínica y de vacunación.
- * 
- * @author Equipo
- * @version 1.1
- */
 public class Consulta implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,21 +13,27 @@ public class Consulta implements Serializable {
     private Medico medico;
     private Date fechaConsulta;
 
+    // Datos clínicos
     private String sintomas;
     private String diagnostico;
     private String tratamiento;
+    private double pesoRegistrado; // Peso del paciente al momento de la consulta
 
+    // Vigilancia y Privacidad
     private Enfermedad enfermedadVigilada; // Puede ser null
     private boolean vaAlResumen;
+    private boolean esPublica; // Checkbox manual del médico
 
-    private ArrayList<Vacuna> vacunasAplicadas; // Lista de vacunas aplicadas
+    // Vacunación (Solo 1 por consulta según requerimiento)
+    private Vacuna vacunaAplicada; // Puede ser null
+    
     private Cita citaAsociada;
 
     // ====== Constructor ======
     public Consulta(String id, Paciente paciente, Medico medico, Date fechaConsulta,
-                    String sintomas, String diagnostico, String tratamiento,
-                    Enfermedad enfermedadVigilada, boolean vaAlResumen,
-                    ArrayList<Vacuna> vacunasAplicadas, Cita citaAsociada) {
+                    String sintomas, String diagnostico, String tratamiento, double pesoRegistrado,
+                    Enfermedad enfermedadVigilada, boolean vaAlResumen, boolean esPublica,
+                    Vacuna vacunaAplicada, Cita citaAsociada) {
         this.id = id;
         this.paciente = paciente;
         this.medico = medico;
@@ -44,9 +41,11 @@ public class Consulta implements Serializable {
         this.sintomas = sintomas;
         this.diagnostico = diagnostico;
         this.tratamiento = tratamiento;
+        this.pesoRegistrado = pesoRegistrado; 
         this.enfermedadVigilada = enfermedadVigilada;
         this.vaAlResumen = vaAlResumen;
-        this.vacunasAplicadas = (vacunasAplicadas != null) ? vacunasAplicadas : new ArrayList<>();
+        this.esPublica = esPublica;
+        this.vacunaAplicada = vacunaAplicada;
         this.citaAsociada = citaAsociada;
     }
 
@@ -56,64 +55,48 @@ public class Consulta implements Serializable {
     public void setId(String id) { this.id = id; }
 
     public Paciente getPaciente() { return paciente; }
-    public void setPaciente(Paciente paciente) { this.paciente = paciente; }
-
     public Medico getMedico() { return medico; }
-    public void setMedico(Medico medico) { this.medico = medico; }
-
     public Date getFechaConsulta() { return fechaConsulta; }
-    public void setFechaConsulta(Date fechaConsulta) { this.fechaConsulta = fechaConsulta; }
-
+    
     public String getSintomas() { return sintomas; }
-    public void setSintomas(String sintomas) { this.sintomas = sintomas; }
-
     public String getDiagnostico() { return diagnostico; }
-    public void setDiagnostico(String diagnostico) { this.diagnostico = diagnostico; }
-
     public String getTratamiento() { return tratamiento; }
-    public void setTratamiento(String tratamiento) { this.tratamiento = tratamiento; }
+    
+    public double getPesoRegistrado() { return pesoRegistrado; }
 
     public Enfermedad getEnfermedadVigilada() { return enfermedadVigilada; }
-    public void setEnfermedadVigilada(Enfermedad enfermedadVigilada) { this.enfermedadVigilada = enfermedadVigilada; }
-
     public boolean isVaAlResumen() { return vaAlResumen; }
-    public void setVaAlResumen(boolean vaAlResumen) { this.vaAlResumen = vaAlResumen; }
+    
+    public boolean isEsPublica() { return esPublica; }
+    public void setEsPublica(boolean esPublica) { this.esPublica = esPublica; }
 
-    public ArrayList<Vacuna> getVacunasAplicadas() { return vacunasAplicadas; }
-    public void setVacunasAplicadas(ArrayList<Vacuna> vacunasAplicadas) { this.vacunasAplicadas = vacunasAplicadas; }
+    public Vacuna getVacunaAplicada() { return vacunaAplicada; }
 
     public Cita getCitaAsociada() { return citaAsociada; }
-    public void setCitaAsociada(Cita citaAsociada) { this.citaAsociada = citaAsociada; }
-
-    // ====== Métodos adicionales ======
-
-    public void agregarVacuna(Vacuna vacuna) {
-        if (vacuna != null && !vacunasAplicadas.contains(vacuna)) {
-            vacunasAplicadas.add(vacuna);
-        }
-    }
-
-    public boolean tieneVacuna(Vacuna vacuna) {
-        return vacunasAplicadas != null && vacunasAplicadas.contains(vacuna);
-    }
 
     /**
-     * Determina si la consulta puede ser vista por un médico dado.
+     * Determina si la consulta es visible para un médico específico.
+     * Reglas:
+     * 1. Es el mismo médico que la creó.
+     * 2. O la consulta fue marcada como pública manualmente.
+     * 3. O tiene una enfermedad vigilada (es pública automáticamente).
      */
     public boolean esVisiblePara(Medico m) {
-        return this.medico.equals(m) || this.enfermedadVigilada != null;
+        if (m == null) return false;
+        
+        // Comparación de Strings (Cédulas) en lugar de HashCode
+        boolean esMiConsulta = this.medico.getCedula().equals(m.getCedula());
+        boolean tieneEnfermedadVigilada = (this.enfermedadVigilada != null);
+        
+        return esMiConsulta || this.esPublica || tieneEnfermedadVigilada;
     }
-
+    
+    // Método equals simple basado en ID (String)
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Consulta)) return false;
-        Consulta consulta = (Consulta) o;
-        return Objects.equals(id, consulta.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Consulta other = (Consulta) obj;
+        return id != null && id.equals(other.id);
     }
 }
