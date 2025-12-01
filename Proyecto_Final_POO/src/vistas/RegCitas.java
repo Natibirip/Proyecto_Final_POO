@@ -80,7 +80,7 @@ public class RegCitas extends JDialog {
         JButton btnNuevoPaciente = new JButton("Nuevo");
         btnNuevoPaciente.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                RegCliente regCliente = new RegCliente();
+                RegClientePrt2 regCliente = new RegClientePrt2();
                 regCliente.setVisible(true);
             }
         });
@@ -176,7 +176,7 @@ public class RegCitas extends JDialog {
                 "Paciente no encontrado", JOptionPane.YES_NO_OPTION);
             
             if (opcion == JOptionPane.YES_OPTION) {
-                RegCliente regCliente = new RegCliente();
+                RegClientePrt2 regCliente = new RegClientePrt2();
                 regCliente.setVisible(true);
             }
         }
