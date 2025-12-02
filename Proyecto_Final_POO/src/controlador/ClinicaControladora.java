@@ -361,6 +361,67 @@ public class ClinicaControladora implements Serializable {
         }
     }
     
+ // En ClinicaControladora.java
+
+ // 1. Contar citas totales para hoy (Secretaria/Admin)
+ public int contarCitasHoy() {
+     int contador = 0;
+     String hoy = new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date());
+     
+     if (citas != null) {
+         for (Cita c : citas) {
+             if (c.getFechaFormateada().equals(hoy) && 
+                 c.getEstado() != modelos.EstadoCita.CANCELADA) {
+                 contador++;
+             }
+         }
+     }
+     return contador;
+ }
+
+ // 2. Contar citas específicas de un médico para hoy (Médico)
+ public int contarCitasMedicoHoy(Medico m) {
+     int contador = 0;
+     String hoy = new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date());
+     
+     if (citas != null) {
+         for (Cita c : citas) {
+             if (c.getMedico().getCedula().equals(m.getCedula()) &&
+                 c.getFechaFormateada().equals(hoy) &&
+                 c.getEstado() != modelos.EstadoCita.CANCELADA) {
+                 contador++;
+             }
+         }
+     }
+     return contador;
+ }
+
+ // 3. Contar vacunas con poco stock (Admin)
+ public int contarAlertasStock() {
+     int contador = 0;
+     if (inventarioVacunas != null) {
+         for (modelos.Vacuna v : inventarioVacunas) {
+             if (v.isActiva() && v.getCantidad() <= 5) { // Umbral de alerta
+                 contador++;
+             }
+         }
+     }
+     return contador;
+ }
+
+ public int contarMedicos() {
+	    return medicos != null ? medicos.size() : 0;
+	}
+
+	public int contarEnfermedades() {
+	    return enfermedadesVigiladas != null ? enfermedadesVigiladas.size() : 0;
+	}
+	
+ // 4. Contar Pacientes Totales
+ public int contarPacientes() {
+     return pacientes != null ? pacientes.size() : 0;
+ }
+ 
     // ==========================================
     // GETTERS
     // ==========================================
@@ -443,4 +504,5 @@ public class ClinicaControladora implements Serializable {
     	    return listaEspecialidades;
 
     	}
+
 }

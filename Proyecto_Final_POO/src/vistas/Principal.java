@@ -1,10 +1,13 @@
 package vistas;
 
+import controlador.ClinicaControladora;
+import modelos.Medico;
 import modelos.RolUsuario;
 import modelos.Usuario;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,45 +18,48 @@ public class Principal extends JFrame {
 
     private Usuario usuarioActual;
     
-    // Componentes del Men˙
+    // Componentes del Men√∫
     private JMenuItem itemGestionarUsuarios;
     private JMenuItem itemNuevaConsulta;
     private JMenuItem itemHistorialMedico;
     private JMenu menuAdministracion;
     private JMenu menuConsultas;
     
-    // Panel de escritorio para ventanas internas (MDI - opcional)
-    // O simplemente usamos un panel con fondo
-    private JLabel lblFondo;
+    // Panel de Dashboard (NUEVO)
+    private JPanel panelDashboard;
 
     public Principal(Usuario usuario) {
         this.usuarioActual = usuario;
 
-        // ConfiguraciÛn de la Ventana
-        setTitle("Sistema de GestiÛn ClÌnica - Men˙ Principal");
+        // Configuraci√≥n de la Ventana
+        setTitle("Sistema de Gesti√≥n Cl√≠nica - Men√∫ Principal");
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Pantalla completa
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
 
-        // 1. Crear Barra de Men˙
+        // 1. Crear Barra de Men√∫ (INTACTO)
         crearBarraMenu();
 
-        // 2. Crear Panel Central (Bienvenida)
+        // 2. Crear Panel Central (MODIFICADO PARA DASHBOARD)
         crearPanelCentral();
 
         // 3. Crear Barra de Estado (Info del usuario)
         crearBarraEstado();
 
-        // 4. Aplicar Restricciones seg˙n el Rol
+        // 4. Aplicar Restricciones seg√∫n el Rol
         aplicarPermisos();
+        
+        // 5. Cargar Widgets Din√°micos (NUEVO)
+        cargarWidgetsSegunRol();
     }
 
     private void crearBarraMenu() {
+        // ... (TU C√ìDIGO DE MEN√ö SE MANTIENE EXACTAMENTE IGUAL AQU√ç) ...
         JMenuBar menuBar = new JMenuBar();
 
         // --- MENU ARCHIVO ---
         JMenu menuArchivo = new JMenu("Archivo");
-        JMenuItem itemCerrarSesion = new JMenuItem("Cerrar SesiÛn");
+        JMenuItem itemCerrarSesion = new JMenuItem("Cerrar Sesi√≥n");
         JMenuItem itemSalir = new JMenuItem("Salir del Sistema");
         
         itemCerrarSesion.addActionListener(e -> cerrarSesion());
@@ -63,87 +69,71 @@ public class Principal extends JFrame {
         menuArchivo.addSeparator();
         menuArchivo.add(itemSalir);
 
-        // --- MENU PACIENTES (Accesible para todos, pero con diferencias internas) ---
+        // --- MENU PACIENTES ---
         JMenu menuPacientes = new JMenu("Pacientes");
         JMenuItem itemNuevoPaciente = new JMenuItem("Registrar Paciente");
-        itemNuevoPaciente.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		RegClientePrt2 ventanaCliente = new RegClientePrt2();
-                ventanaCliente.setVisible(true);
-                //dispose();
-        	}
+        itemNuevoPaciente.addActionListener(e -> {
+            RegClientePrt2 ventanaCliente = new RegClientePrt2();
+            ventanaCliente.setVisible(true);
         });
         JMenuItem itemBuscarPaciente = new JMenuItem("Buscar / Editar Paciente");
-        itemBuscarPaciente.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		BuscarPacientesFrame listaPaciente = new BuscarPacientesFrame();
-                listaPaciente.setVisible(true);
-                
-        	}
+        itemBuscarPaciente.addActionListener(e -> {
+            BuscarPacientesFrame listaPaciente = new BuscarPacientesFrame();
+            listaPaciente.setVisible(true);
         });
 
         menuPacientes.add(itemNuevoPaciente);
         menuPacientes.add(itemBuscarPaciente);
 
-        // --- MENU CITAS (Secretaria y MÈdicos) ---
+        // --- MENU CITAS ---
         JMenu menuCitas = new JMenu("Citas");
         JMenuItem itemAgendarCita = new JMenuItem("Agendar Nueva Cita");
-        itemAgendarCita.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		RegCita ventanaCita = new RegCita(null);
-                ventanaCita.setVisible(true);
-        	}
+        itemAgendarCita.addActionListener(e -> {
+            RegCita ventanaCita = new RegCita(null);
+            ventanaCita.setVisible(true);
         });
         JMenuItem itemVerAgenda = new JMenuItem("Ver Agenda");
-        itemVerAgenda.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		ListaCitasFrame ventanaListaCita = new ListaCitasFrame(usuarioActual);
-                ventanaListaCita.setVisible(true);
-        	}
+        itemVerAgenda.addActionListener(e -> {
+            ListaCitasFrame ventanaListaCita = new ListaCitasFrame(usuarioActual);
+            ventanaListaCita.setVisible(true);
         });
 
         menuCitas.add(itemAgendarCita);
         menuCitas.add(itemVerAgenda);
 
-        // --- MENU CONSULTAS (¡rea MÈdica) ---
-        menuConsultas = new JMenu("Consultas MÈdicas");
-        itemNuevaConsulta = new JMenuItem("Realizar Consulta / DiagnÛstico");
-        itemHistorialMedico = new JMenuItem("Ver Historial ClÌnico");
-        itemHistorialMedico.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		VerHistorialFrame ventanaHistorial = new VerHistorialFrame(usuarioActual);
-        		ventanaHistorial.setVisible(true);
-        	}
+        // --- MENU CONSULTAS ---
+        menuConsultas = new JMenu("Consultas M√©dicas");
+        itemNuevaConsulta = new JMenuItem("Realizar Consulta / Diagn√≥stico");
+        itemHistorialMedico = new JMenuItem("Ver Historial Cl√≠nico");
+        itemHistorialMedico.addActionListener(e -> {
+            VerHistorialFrame ventanaHistorial = new VerHistorialFrame(usuarioActual);
+            ventanaHistorial.setVisible(true);
         });
         
         menuConsultas.add(itemNuevaConsulta);
         menuConsultas.add(itemHistorialMedico);
 
         // --- MENU VACUNAS ---
-        JMenu menuVacunas = new JMenu("VacunaciÛn");
-        JMenuItem itemInventario = new JMenuItem("GestiÛn de Inventario");
-        itemInventario.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		GestionVacunasFrame ventanaVacunas = new GestionVacunasFrame();
-        		ventanaVacunas.setVisible(true);
-        	}
+        JMenu menuVacunas = new JMenu("Vacunaci√≥n");
+        JMenuItem itemInventario = new JMenuItem("Gesti√≥n de Inventario");
+        itemInventario.addActionListener(e -> {
+            GestionVacunasFrame ventanaVacunas = new GestionVacunasFrame();
+            ventanaVacunas.setVisible(true);
         });
 
         menuVacunas.add(itemInventario);
 
-        // --- MENU ADMINISTRACI”N (Solo Admin) ---
-        menuAdministracion = new JMenu("AdministraciÛn");
+        // --- MENU ADMINISTRACI√ìN ---
+        menuAdministracion = new JMenu("Administraci√≥n");
         itemGestionarUsuarios = new JMenuItem("Gestionar Usuarios y Roles");
-        itemGestionarUsuarios.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		GestionUsuariosFrame ventanaUsuarios = new GestionUsuariosFrame();
-                ventanaUsuarios.setVisible(true);
-        	}
+        itemGestionarUsuarios.addActionListener(e -> {
+            GestionUsuariosFrame ventanaUsuarios = new GestionUsuariosFrame();
+            ventanaUsuarios.setVisible(true);
         });
         
         menuAdministracion.add(itemGestionarUsuarios);
 
-        // Agregar men˙s a la barra
+        // Agregar men√∫s a la barra
         menuBar.add(menuArchivo);
         menuBar.add(menuPacientes);
         menuBar.add(menuCitas);
@@ -153,12 +143,10 @@ public class Principal extends JFrame {
         JMenu mnEnfermedades = new JMenu("Enfermedades");
         menuBar.add(mnEnfermedades);
         
-        JMenuItem mntmEnfermedadesBajoVigilancia = new JMenuItem("enfermedades bajo vigilancia");
-        mntmEnfermedadesBajoVigilancia.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		GestionEnfermedadesFrame ventanaEnfermedades = new GestionEnfermedadesFrame();
-        		ventanaEnfermedades.setVisible(true);
-        	}
+        JMenuItem mntmEnfermedadesBajoVigilancia = new JMenuItem("Enfermedades bajo vigilancia");
+        mntmEnfermedadesBajoVigilancia.addActionListener(e -> {
+            GestionEnfermedadesFrame ventanaEnfermedades = new GestionEnfermedadesFrame();
+            ventanaEnfermedades.setVisible(true);
         });
         mnEnfermedades.add(mntmEnfermedadesBajoVigilancia);
         
@@ -166,37 +154,45 @@ public class Principal extends JFrame {
         menuBar.add(mnReportes);
         
         JMenuItem mntmReportesConsultas = new JMenuItem("Reportes consultas");
-        mntmReportesConsultas.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		ReportesGraficosFrame ventanaReportes = new ReportesGraficosFrame();
-        		ventanaReportes.setVisible(true);
-        	}
+        mntmReportesConsultas.addActionListener(e -> {
+            ReportesGraficosFrame ventanaReportes = new ReportesGraficosFrame();
+            ventanaReportes.setVisible(true);
         });
         mnReportes.add(mntmReportesConsultas);
         menuBar.add(menuAdministracion);
         
         JMenuItem mntmGestionarPersonal = new JMenuItem("Gestionar Personal");
-        mntmGestionarPersonal.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		GestionPersonalFrame ventanaPersonal = new GestionPersonalFrame();
-                ventanaPersonal.setVisible(true);
-        	}
+        mntmGestionarPersonal.addActionListener(e -> {
+            GestionPersonalFrame ventanaPersonal = new GestionPersonalFrame();
+            ventanaPersonal.setVisible(true);
         });
         menuAdministracion.add(mntmGestionarPersonal);
 
         setJMenuBar(menuBar);
     }
 
+    // --- Panel Central con Dashboard ---
     private void crearPanelCentral() {
-        JPanel panelCentral = new JPanel();
-        panelCentral.setLayout(new GridBagLayout()); // Para centrar el texto
+        JPanel panelCentral = new JPanel(new BorderLayout());
         panelCentral.setBackground(Color.WHITE);
 
-        JLabel lblBienvenida = new JLabel("Bienvenido al Sistema ClÌnico");
-        lblBienvenida.setFont(new Font("Arial", Font.BOLD, 32));
-        lblBienvenida.setForeground(new Color(0, 102, 204)); // Azul mÈdico
+        // T√≠tulo de Bienvenida
+        JLabel lblBienvenida = new JLabel("Hola, " + usuarioActual.getUsername());
+        lblBienvenida.setFont(new Font("Arial", Font.BOLD, 28));
+        lblBienvenida.setBorder(new EmptyBorder(20, 30, 20, 0));
+        lblBienvenida.setForeground(new Color(60, 60, 60));
+        panelCentral.add(lblBienvenida, BorderLayout.NORTH);
 
-        panelCentral.add(lblBienvenida);
+        // Contenedor de Tarjetas (Widgets)
+        panelDashboard = new JPanel();
+        panelDashboard.setLayout(new GridLayout(0, 3, 20, 20)); // Grid adaptable
+        panelDashboard.setBackground(Color.WHITE);
+        panelDashboard.setBorder(new EmptyBorder(20, 30, 20, 30));
+        
+        JScrollPane scroll = new JScrollPane(panelDashboard);
+        scroll.setBorder(null); // Sin borde feo
+        
+        panelCentral.add(scroll, BorderLayout.CENTER);
         getContentPane().add(panelCentral, BorderLayout.CENTER);
     }
 
@@ -206,7 +202,6 @@ public class Principal extends JFrame {
         panelEstado.setLayout(new FlowLayout(FlowLayout.LEFT));
         panelEstado.setBackground(SystemColor.control);
 
-        // InformaciÛn del usuario
         String rol = usuarioActual.getRol().toString();
         String usuario = usuarioActual.getUsername();
         String fecha = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
@@ -218,44 +213,179 @@ public class Principal extends JFrame {
         getContentPane().add(panelEstado, BorderLayout.SOUTH);
     }
 
-    // ==========================================
-    // L”GICA DE PERMISOS (SEGURIDAD)
-    // ==========================================
     private void aplicarPermisos() {
         RolUsuario rol = usuarioActual.getRol();
 
-        // 1. ADMINISTRADOR
-        if (rol == RolUsuario.ADMINISTRADOR) {
-            // Tiene acceso a todo, no ocultamos nada.
-        } 
-        
-        // 2. SECRETARIA
-        else if (rol == RolUsuario.SECRETARIA) {
-            // No puede ver datos mÈdicos sensibles
-            menuConsultas.setVisible(false); // Ocultamos el men˙ completo de consultas
-            // O deshabilitamos opciones especÌficas:
-            // itemNuevaConsulta.setEnabled(false);
-            
-            // No puede administrar usuarios
+        if (rol == RolUsuario.SECRETARIA) {
+            menuConsultas.setVisible(false);
             menuAdministracion.setVisible(false);
-            
-        } 
-        
-        // 3. MEDICO
-        else if (rol == RolUsuario.MEDICO) {
-            // No puede administrar usuarios
+        } else if (rol == RolUsuario.MEDICO) {
             menuAdministracion.setVisible(false);
-            
-            // Puede hacer consultas y ver historiales
             menuConsultas.setVisible(true);
-            
         }
     }
 
     private void cerrarSesion() {
-        // Cerrar esta ventana
         this.dispose();
-        // Abrir login de nuevo
         new LoginScreen().setVisible(true);
+    }
+
+    // =================================================================
+    // L√ìGICA DE WIDGETS DIN√ÅMICOS SEG√öN ROL
+    // =================================================================
+    
+ // =================================================================
+    // L√ìGICA DE WIDGETS DIN√ÅMICOS SEG√öN ROL (ACTUALIZADO)
+    // =================================================================
+    
+    private void cargarWidgetsSegunRol() {
+        panelDashboard.removeAll(); // Limpiar
+        ClinicaControladora ctrl = ClinicaControladora.getInstance();
+        RolUsuario rol = usuarioActual.getRol();
+
+        // --- CASO 1: M√âDICO ---
+        if (rol == RolUsuario.MEDICO) {
+            
+            // Si el usuario tiene un objeto Medico asociado, contamos SUS citas
+            int citasHoy = 0;
+            if(usuarioActual.getPersonaAsociada() instanceof Medico) {
+                Medico m = (Medico) usuarioActual.getPersonaAsociada();
+                citasHoy = ctrl.contarCitasMedicoHoy(m);
+            }
+            
+            // Tarjeta 1: Citas de Hoy (Agenda Personal)
+            agregarTarjeta("Mis Citas de Hoy", String.valueOf(citasHoy), new Color(100, 149, 237), e -> {
+                new ListaCitasFrame(usuarioActual).setVisible(true); 
+            });
+
+            // Tarjeta 2: Registrar Nuevo Paciente (CAMBIO SOLICITADO)
+            agregarTarjeta("Registrar Paciente", "Nuevo +", new Color(60, 179, 113), e -> {
+                new RegClientePrt2().setVisible(true);
+            });
+            
+            // Tarjeta 3: Historiales / B√∫squeda
+            agregarTarjeta("Historiales", "B√∫squeda", new Color(255, 165, 0), e -> {
+                new VerHistorialFrame(usuarioActual).setVisible(true);
+            });
+        } 
+        
+        // --- CASO 2: SECRETARIA ---
+        else if (rol == RolUsuario.SECRETARIA) {
+            
+            int citasTotal = ctrl.contarCitasHoy();
+            int totalPacientes = ctrl.contarPacientes();
+            
+            // Tarjeta 1: Gesti√≥n de Agenda (General)
+            agregarTarjeta("Agenda Global Hoy", citasTotal + " citas", new Color(70, 130, 180), e -> {
+                new ListaCitasFrame(usuarioActual).setVisible(true);
+            });
+
+            // Tarjeta 2: Buscar Paciente (CAMBIO SOLICITADO)
+            // Muestra el total y lleva a la b√∫squeda, pero NO crea.
+            agregarTarjeta("Directorio Pacientes", totalPacientes + " reg.", new Color(255, 165, 0), e -> {
+                new BuscarPacientesFrame().setVisible(true);
+            });
+
+            // Tarjeta 3: Agendar Cita
+            agregarTarjeta("Nueva Cita", "Agendar", new Color(147, 112, 219), e -> {
+                new RegCita(this).setVisible(true);
+            });
+        } 
+        
+        // --- CASO 3: ADMINISTRADOR (6 WIDGETS) ---
+        else if (rol == RolUsuario.ADMINISTRADOR) {
+            
+            int alertasStock = ctrl.contarAlertasStock();
+            int totalPacientes = ctrl.contarPacientes();
+            int totalMedicos = ctrl.contarMedicos();
+            int totalEnf = ctrl.contarEnfermedades();
+            
+            // Fila 1
+            // 1. Alertas Stock
+            Color colorAlerta = (alertasStock > 0) ? new Color(220, 20, 60) : new Color(46, 139, 87);
+            agregarTarjeta("Alertas Stock Vacunas", alertasStock + " cr√≠ticas", colorAlerta, e -> {
+                new GestionVacunasFrame().setVisible(true);
+            });
+
+            // 2. Base de Pacientes
+            agregarTarjeta("Base de Pacientes", totalPacientes + " total", new Color(70, 130, 180), e -> {
+                new BuscarPacientesFrame().setVisible(true);
+            });
+            
+            // 3. Reportes BI
+            agregarTarjeta("Reportes BI", "Anal√≠ticas", new Color(255, 140, 0), e -> {
+                new ReportesGraficosFrame().setVisible(true);
+            });
+            
+            // Fila 2 (Nuevos Widgets)
+            // 4. Gesti√≥n Usuarios
+            agregarTarjeta("Usuarios Sistema", "Accesos", Color.GRAY, e -> {
+                new GestionUsuariosFrame().setVisible(true);
+            });
+
+            // 5. Gesti√≥n Enfermedades (NUEVO)
+            agregarTarjeta("Cat√°logo Enfermedades", totalEnf + " tipos", new Color(123, 104, 238), e -> {
+                new GestionEnfermedadesFrame().setVisible(true);
+            });
+
+            // 6. Gesti√≥n Personal M√©dico (NUEVO)
+            agregarTarjeta("Plantilla M√©dica", totalMedicos + " Doctores", new Color(0, 128, 128), e -> {
+                new GestionPersonalFrame().setVisible(true);
+            });
+        }
+
+        panelDashboard.revalidate();
+        panelDashboard.repaint();
+    }
+
+    private void agregarTarjeta(String titulo, String valor, Color colorBorde, ActionListener accion) {
+        PanelTarjeta tarjeta = new PanelTarjeta(titulo, valor, colorBorde, accion);
+        panelDashboard.add(tarjeta);
+    }
+
+    // =================================================================
+    // CLASE INTERNA VISUAL: LA TARJETA (WIDGET)
+    // =================================================================
+    class PanelTarjeta extends JPanel {
+        public PanelTarjeta(String titulo, String valor, Color colorTema, ActionListener accion) {
+            setLayout(new BorderLayout());
+            setBackground(Color.WHITE);
+            // Borde izquierdo grueso con el color del tema
+            setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 1, 1, 1, Color.LIGHT_GRAY), // Borde fino alrededor
+                BorderFactory.createMatteBorder(0, 10, 0, 0, colorTema)       // Borde grueso izq
+            ));
+            setPreferredSize(new Dimension(200, 150)); // Tama√±o base
+
+            // Panel Contenido
+            JPanel contenido = new JPanel(new GridLayout(2, 1));
+            contenido.setOpaque(false);
+            contenido.setBorder(new EmptyBorder(15, 15, 10, 15));
+
+            JLabel lblTitulo = new JLabel(titulo);
+            lblTitulo.setFont(new Font("SansSerif", Font.PLAIN, 16));
+            lblTitulo.setForeground(Color.GRAY);
+            
+            JLabel lblValor = new JLabel(valor);
+            lblValor.setFont(new Font("SansSerif", Font.BOLD, 28));
+            lblValor.setForeground(Color.DARK_GRAY);
+
+            contenido.add(lblTitulo);
+            contenido.add(lblValor);
+            add(contenido, BorderLayout.CENTER);
+
+            // Bot√≥n de Acci√≥n (Flecha o texto)
+            if (accion != null) {
+                JButton btnIr = new JButton("Ir a secci√≥n ‚Üí");
+                btnIr.setBorderPainted(false);
+                btnIr.setContentAreaFilled(false);
+                btnIr.setForeground(colorTema);
+                btnIr.setFont(new Font("SansSerif", Font.BOLD, 12));
+                btnIr.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                btnIr.setHorizontalAlignment(SwingConstants.RIGHT);
+                btnIr.addActionListener(accion);
+                add(btnIr, BorderLayout.SOUTH);
+            }
+        }
     }
 }

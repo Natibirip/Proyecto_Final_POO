@@ -2,5 +2,6 @@ eclipse.preferences.version=1
 encoding//src/modelos/Cita.java=UTF-8
 encoding//src/modelos/Enfermedad.java=UTF-8
 encoding//src/vistas/GestionVacunasFrame.java=UTF-8
+encoding//src/vistas/Principal.java=UTF-8
 encoding//src/vistas/RealizarConsultaFrame.java=UTF-8
 encoding//src/vistas/ReportesGraficosFrame.java=UTF-8
