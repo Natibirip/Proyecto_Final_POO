@@ -161,6 +161,18 @@ public class Principal extends JFrame {
         	}
         });
         mnEnfermedades.add(mntmEnfermedadesBajoVigilancia);
+        
+        JMenu mnReportes = new JMenu("Reportes");
+        menuBar.add(mnReportes);
+        
+        JMenuItem mntmReportesConsultas = new JMenuItem("Reportes consultas");
+        mntmReportesConsultas.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		ReportesGraficosFrame ventanaReportes = new ReportesGraficosFrame();
+        		ventanaReportes.setVisible(true);
+        	}
+        });
+        mnReportes.add(mntmReportesConsultas);
         menuBar.add(menuAdministracion);
         
         JMenuItem mntmGestionarPersonal = new JMenuItem("Gestionar Personal");
@@ -173,15 +185,6 @@ public class Principal extends JFrame {
         menuAdministracion.add(mntmGestionarPersonal);
 
         setJMenuBar(menuBar);
-        
-        JMenu mnReportes = new JMenu("Reportes");
-        menuBar.add(mnReportes);
-        
-        JMenuItem mntmReportesConsultas = new JMenuItem("Reportes consultas");
-        mnReportes.add(mntmReportesConsultas);
-        
-        JMenuItem mntmReportesEnfermedades = new JMenuItem("Reportes Enfermedades");
-        mnReportes.add(mntmReportesEnfermedades);
     }
 
     private void crearPanelCentral() {

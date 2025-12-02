@@ -51,28 +51,63 @@ public class Consulta implements Serializable {
 
     // ====== Getters y Setters ======
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
 
-    public Paciente getPaciente() { return paciente; }
-    public Medico getMedico() { return medico; }
-    public Date getFechaConsulta() { return fechaConsulta; }
-    
-    public String getSintomas() { return sintomas; }
-    public String getDiagnostico() { return diagnostico; }
-    public String getTratamiento() { return tratamiento; }
-    
-    public double getPesoRegistrado() { return pesoRegistrado; }
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
-    public Enfermedad getEnfermedadVigilada() { return enfermedadVigilada; }
-    public boolean isVaAlResumen() { return vaAlResumen; }
-    
-    public boolean isEsPublica() { return esPublica; }
-    public void setEsPublica(boolean esPublica) { this.esPublica = esPublica; }
+	public String getId() {
+		return id;
+	}
 
-    public Vacuna getVacunaAplicada() { return vacunaAplicada; }
+	public Paciente getPaciente() {
+		return paciente;
+	}
 
-    public Cita getCitaAsociada() { return citaAsociada; }
+	public Medico getMedico() {
+		return medico;
+	}
+
+	public Date getFechaConsulta() {
+		return fechaConsulta;
+	}
+
+	public String getSintomas() {
+		return sintomas;
+	}
+
+	public String getDiagnostico() {
+		return diagnostico;
+	}
+
+	public String getTratamiento() {
+		return tratamiento;
+	}
+
+	public double getPesoRegistrado() {
+		return pesoRegistrado;
+	}
+
+	public Enfermedad getEnfermedadVigilada() {
+		return enfermedadVigilada;
+	}
+
+	public boolean isVaAlResumen() {
+		return vaAlResumen;
+	}
+
+	public boolean isEsPublica() {
+		return esPublica;
+	}
+
+	public Vacuna getVacunaAplicada() {
+		return vacunaAplicada;
+	}
+
+	public Cita getCitaAsociada() {
+		return citaAsociada;
+	}
+
 
     /**
      * Determina si la consulta es visible para un médico específico.
