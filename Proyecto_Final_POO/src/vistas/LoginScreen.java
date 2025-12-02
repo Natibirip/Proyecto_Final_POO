@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class LoginScreen extends JFrame {
 
@@ -52,6 +53,7 @@ public class LoginScreen extends JFrame {
 		setTitle("Acceso al Sistema Clínico");
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(224, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -75,6 +77,7 @@ public class LoginScreen extends JFrame {
 		contentPane.add(passwordField);
 		
 		JCheckBox checkpass = new JCheckBox("Mostrar contrase\u00F1a");
+		checkpass.setBackground(new Color(224, 255, 255));
 		checkpass.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -91,6 +94,7 @@ public class LoginScreen extends JFrame {
 		contentPane.add(checkpass);
 		
 		JButton ingresarbtn = new JButton("Ingresar");
+		ingresarbtn.setBackground(new Color(152, 251, 152));
 		ingresarbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				procesarLogin();
@@ -103,6 +107,11 @@ public class LoginScreen extends JFrame {
 		lblNewLabel.setFont(new Font("Arial Black", Font.PLAIN, 18));
 		lblNewLabel.setBounds(125, 13, 159, 16);
 		contentPane.add(lblNewLabel);
+		
+		JLabel lblSistemaClinico = new JLabel("Sistema Clinico");
+		lblSistemaClinico.setFont(new Font("Arial Black", Font.PLAIN, 18));
+		lblSistemaClinico.setBounds(12, 219, 159, 16);
+		contentPane.add(lblSistemaClinico);
 	}
 	
 	private void procesarLogin() {
