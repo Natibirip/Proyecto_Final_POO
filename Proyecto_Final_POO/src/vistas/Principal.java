@@ -19,7 +19,6 @@ public class Principal extends JFrame {
     private JMenuItem itemGestionarUsuarios;
     private JMenuItem itemNuevaConsulta;
     private JMenuItem itemHistorialMedico;
-    private JMenuItem itemReporteVacunas;
     private JMenu menuAdministracion;
     private JMenu menuConsultas;
     
@@ -129,10 +128,8 @@ public class Principal extends JFrame {
         		ventanaVacunas.setVisible(true);
         	}
         });
-        itemReporteVacunas = new JMenuItem("Reporte de Cobertura");
 
         menuVacunas.add(itemInventario);
-        menuVacunas.add(itemReporteVacunas);
 
         // --- MENU ADMINISTRACIÓN (Solo Admin) ---
         menuAdministracion = new JMenu("Administración");
@@ -152,6 +149,18 @@ public class Principal extends JFrame {
         menuBar.add(menuCitas);
         menuBar.add(menuConsultas);
         menuBar.add(menuVacunas);
+        
+        JMenu mnEnfermedades = new JMenu("Enfermedades");
+        menuBar.add(mnEnfermedades);
+        
+        JMenuItem mntmEnfermedadesBajoVigilancia = new JMenuItem("enfermedades bajo vigilancia");
+        mntmEnfermedadesBajoVigilancia.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		GestionEnfermedadesFrame ventanaEnfermedades = new GestionEnfermedadesFrame();
+        		ventanaEnfermedades.setVisible(true);
+        	}
+        });
+        mnEnfermedades.add(mntmEnfermedadesBajoVigilancia);
         menuBar.add(menuAdministracion);
         
         JMenuItem mntmGestionarPersonal = new JMenuItem("Gestionar Personal");
@@ -164,6 +173,15 @@ public class Principal extends JFrame {
         menuAdministracion.add(mntmGestionarPersonal);
 
         setJMenuBar(menuBar);
+        
+        JMenu mnReportes = new JMenu("Reportes");
+        menuBar.add(mnReportes);
+        
+        JMenuItem mntmReportesConsultas = new JMenuItem("Reportes consultas");
+        mnReportes.add(mntmReportesConsultas);
+        
+        JMenuItem mntmReportesEnfermedades = new JMenuItem("Reportes Enfermedades");
+        mnReportes.add(mntmReportesEnfermedades);
     }
 
     private void crearPanelCentral() {
@@ -218,8 +236,6 @@ public class Principal extends JFrame {
             // No puede administrar usuarios
             menuAdministracion.setVisible(false);
             
-            // Puede ver inventario de vacunas, pero quizás no reportes complejos
-            itemReporteVacunas.setEnabled(false); 
         } 
         
         // 3. MEDICO
