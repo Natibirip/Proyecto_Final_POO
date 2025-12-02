@@ -347,29 +347,36 @@ public class Principal extends JFrame {
     // =================================================================
     // CLASE INTERNA VISUAL: LA TARJETA (WIDGET)
     // =================================================================
+ // =================================================================
+    // CLASE INTERNA VISUAL: LA TARJETA CON GRADIENTE
+    // =================================================================
     class PanelTarjeta extends JPanel {
+        
         public PanelTarjeta(String titulo, String valor, Color colorTema, ActionListener accion) {
             setLayout(new BorderLayout());
-            setBackground(Color.white);
+            
+            // IMPORTANTE: Desactivar la opacidad predeterminada para pintar el gradiente
+            setOpaque(false);
+            
             // Borde izquierdo grueso con el color del tema
             setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY), // Borde fino alrededor
+                BorderFactory.createMatteBorder(1, 1, 1, 1, Color.LIGHT_GRAY), // Borde fino
                 BorderFactory.createMatteBorder(0, 10, 0, 0, colorTema)       // Borde grueso izq
             ));
             setPreferredSize(new Dimension(200, 150)); // Tamaño base
 
             // Panel Contenido
             JPanel contenido = new JPanel(new GridLayout(2, 1));
-            contenido.setOpaque(false);
+            contenido.setOpaque(false); // Transparente para ver el gradiente de fondo
             contenido.setBorder(new EmptyBorder(15, 15, 10, 15));
 
             JLabel lblTitulo = new JLabel(titulo);
             lblTitulo.setFont(new Font("SansSerif", Font.PLAIN, 16));
-            lblTitulo.setForeground(Color.BLACK);
+            lblTitulo.setForeground(Color.DARK_GRAY); // Gris oscuro para contraste
             
             JLabel lblValor = new JLabel(valor);
             lblValor.setFont(new Font("SansSerif", Font.BOLD, 28));
-            lblValor.setForeground(Color.DARK_GRAY);
+            lblValor.setForeground(Color.BLACK); // Negro para resaltar el número
 
             contenido.add(lblTitulo);
             contenido.add(lblValor);
@@ -380,13 +387,41 @@ public class Principal extends JFrame {
                 JButton btnIr = new JButton("Ir a sección →");
                 btnIr.setBorderPainted(false);
                 btnIr.setContentAreaFilled(false);
-                btnIr.setForeground(colorTema);
+                btnIr.setFocusPainted(false);
+                btnIr.setOpaque(false); // Transparente
+                btnIr.setForeground(colorTema); // Usamos el color del tema para el texto del botón
                 btnIr.setFont(new Font("SansSerif", Font.BOLD, 12));
                 btnIr.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 btnIr.setHorizontalAlignment(SwingConstants.RIGHT);
                 btnIr.addActionListener(accion);
                 add(btnIr, BorderLayout.SOUTH);
             }
+        }
+
+        // --- MÉTODO PARA PINTAR EL GRADIENTE ---
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2d = (Graphics2D) g;
+            
+            // Mejora la calidad del renderizado (bordes suaves)
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            int w = getWidth();
+            int h = getHeight();
+
+            // DEFINICIÓN DEL GRADIENTE: Blanco -> Azul Muy Suave
+            Color colorInicio = Color.WHITE;
+            Color colorFin = new Color(225, 240, 255); // Azul hielo (#E1F0FF)
+
+            // Coordenadas: (0,0) arriba -> (0, h) abajo (Gradiente Vertical)
+            GradientPaint gp = new GradientPaint(0, 0, colorInicio, 0, h, colorFin);
+
+            g2d.setPaint(gp);
+            // Pintamos el rectángulo del fondo
+            g2d.fillRect(0, 0, w, h);
+
+            // Llamada a super necesaria para el funcionamiento correcto de Swing
+            super.paintComponent(g); 
         }
     }
 }
