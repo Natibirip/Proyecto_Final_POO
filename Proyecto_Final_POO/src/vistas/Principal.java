@@ -8,6 +8,9 @@ import modelos.Usuario;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
+
+import Soket.ClienteRespalda;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -153,34 +156,19 @@ public class Principal extends JFrame {
         JMenuItem btnRespaldo = new JMenuItem("Respaldo");
         btnRespaldo.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		try {
-    				sfd = new Socket("127.0.0.1", 7000);
-    				DataInputStream aux = new DataInputStream(new FileInputStream(new File("empresa.dat")));
-    				salidaSocket =  new DataOutputStream((sfd.getOutputStream()));
-    				int unbyte;
-    				
-    				try {
-    					while ((unbyte = aux.read()) != -1) {
-    						salidaSocket.write(unbyte);
-    						salidaSocket.flush();
-    						}
-    					}
-    					catch (IOException ioe) 
-    					{
-    						System.out.println("Error: "+ioe);
-    					}
-    					}	
-    					catch (UnknownHostException uhe) 
-    					{
-    						System.out.println("No se pudo acceder al servidor ");
-    						System.exit(1);
-    					} 
-    					catch (IOException ioe) {
-    						System.out.println("Comunicacion rechazada. ");
-    						System.exit(1);
-    					}
-    				}	
-        	
+        		new Thread(() -> {
+        	        try {
+        	            ClienteRespalda.enviarRespaldo();
+
+        	            SwingUtilities.invokeLater(() ->
+        	                JOptionPane.showMessageDialog(null, "Datos respaldados correctamente"));
+        	        } catch (Exception ex) {
+        	            ex.printStackTrace();
+        	            SwingUtilities.invokeLater(() ->
+        	                JOptionPane.showMessageDialog(null, "Error enviando respaldo:\n" + ex.getMessage()));
+        	        }
+        	    }).start();
+        	}
         });
         menuArchivo.add(btnRespaldo);
         menuBar.add(menuPacientes);

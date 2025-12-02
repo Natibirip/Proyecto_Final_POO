@@ -14,44 +14,60 @@ import java.util.Vector;
 
 
 public class server extends Thread{
-	  public static void main (String args[])
-	  {
-	    ServerSocket sfd = null;
-	    try
-	    {
-	      sfd = new ServerSocket(7000);
-	    }
-	    catch (IOException ioe)
-	    {
-	      System.out.println("Comunicación rechazada."+ioe);
-	      System.exit(1);
-	    }
 
-	    while (true)
-	    {
-	      try
-	      {
-	        Socket nsfd = sfd.accept();
-	        System.out.println("Conexion aceptada de: "+nsfd.getInetAddress());
-		   DataInputStream oos = new DataInputStream(nsfd.getInputStream());
-		   DataOutputStream escritor = new DataOutputStream(new FileOutputStream(new File("empresa_respaldo.dat"))) ;
-			
-		   int unByte;
-		   try {
-			   while ((unByte = oos.read()) != -1) {
-				escritor.write(unByte);
-				oos.close();
-				escritor.close();
-				
-			}
-		   } catch (IOException e) {
-			e.printStackTrace();
-		}
-	      }
-	      catch(IOException ioe)
-	      {
-	        System.out.println("Error: "+ioe);
-	      }
-	    }
-	  }
+    public static void main(String[] args) {
+
+        try {
+            ServerSocket serverSocket = new ServerSocket(9950);
+            System.out.println("Servidor iniciado en puerto 9950...");
+
+            while (true) {
+                Socket cliente = serverSocket.accept();
+                System.out.println("Cliente conectado: " + cliente.getInetAddress());
+
+                // Crear un hilo nuevo para cada cliente
+                new Thread(new ManejadorCliente(cliente)).start();
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error al iniciar servidor: " + e);
+        }
+    }
+}
+
+class ManejadorCliente implements Runnable {
+
+    private Socket socket;
+
+    public ManejadorCliente(Socket socket) {
+        this.socket = socket;
+    }
+
+    @Override
+    public void run() {
+        try {
+
+            DataInputStream entrada = new DataInputStream(socket.getInputStream());
+
+            // Archivo donde se guardará (UNO POR CONEXIÓN)
+            File archivo = new File("empresa_respaldo.dat");
+            FileOutputStream salida = new FileOutputStream(archivo);
+
+            int unByte;
+
+            while ((unByte = entrada.read()) != -1) {
+                salida.write(unByte);
+            }
+
+            // Cerrar SOLO recursos del cliente
+            salida.close();
+            entrada.close();
+            socket.close();
+
+            System.out.println("Archivo recibido y cliente desconectado.");
+
+        } catch (IOException e) {
+            System.out.println("Cliente desconectado inesperadamente: " + e);
+        }
+    }
 }
