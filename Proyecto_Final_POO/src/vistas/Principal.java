@@ -174,10 +174,11 @@ public class Principal extends JFrame {
     // --- Panel Central con Dashboard ---
     private void crearPanelCentral() {
         JPanel panelCentral = new JPanel(new BorderLayout());
-        panelCentral.setBackground(Color.WHITE);
+        panelCentral.setBackground(Color.LIGHT_GRAY);
 
         // Título de Bienvenida
         JLabel lblBienvenida = new JLabel("Hola, " + usuarioActual.getUsername());
+        lblBienvenida.setBackground(new Color(192, 192, 192));
         lblBienvenida.setFont(new Font("Arial", Font.BOLD, 28));
         lblBienvenida.setBorder(new EmptyBorder(20, 30, 20, 0));
         lblBienvenida.setForeground(new Color(60, 60, 60));
@@ -186,7 +187,7 @@ public class Principal extends JFrame {
         // Contenedor de Tarjetas (Widgets)
         panelDashboard = new JPanel();
         panelDashboard.setLayout(new GridLayout(0, 3, 20, 20)); // Grid adaptable
-        panelDashboard.setBackground(Color.WHITE);
+        panelDashboard.setBackground(new Color(173, 216, 230));
         panelDashboard.setBorder(new EmptyBorder(20, 30, 20, 30));
         
         JScrollPane scroll = new JScrollPane(panelDashboard);
@@ -349,10 +350,10 @@ public class Principal extends JFrame {
     class PanelTarjeta extends JPanel {
         public PanelTarjeta(String titulo, String valor, Color colorTema, ActionListener accion) {
             setLayout(new BorderLayout());
-            setBackground(Color.WHITE);
+            setBackground(Color.white);
             // Borde izquierdo grueso con el color del tema
             setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(1, 1, 1, 1, Color.LIGHT_GRAY), // Borde fino alrededor
+                BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY), // Borde fino alrededor
                 BorderFactory.createMatteBorder(0, 10, 0, 0, colorTema)       // Borde grueso izq
             ));
             setPreferredSize(new Dimension(200, 150)); // Tamaño base
@@ -364,7 +365,7 @@ public class Principal extends JFrame {
 
             JLabel lblTitulo = new JLabel(titulo);
             lblTitulo.setFont(new Font("SansSerif", Font.PLAIN, 16));
-            lblTitulo.setForeground(Color.GRAY);
+            lblTitulo.setForeground(Color.BLACK);
             
             JLabel lblValor = new JLabel(valor);
             lblValor.setFont(new Font("SansSerif", Font.BOLD, 28));
