@@ -75,12 +75,13 @@ public class Principal extends JFrame {
         	}
         });
         JMenuItem itemBuscarPaciente = new JMenuItem("Buscar / Editar Paciente");
-        
-        // Acciones (Stubs por ahora)
-        //itemNuevoPaciente.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir Registro Paciente"));
-        
-        
-        itemBuscarPaciente.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abrir Buscador Paciente"));
+        itemBuscarPaciente.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		BuscarPacientesFrame listaPaciente = new BuscarPacientesFrame();
+                listaPaciente.setVisible(true);
+                
+        	}
+        });
 
         menuPacientes.add(itemNuevoPaciente);
         menuPacientes.add(itemBuscarPaciente);
