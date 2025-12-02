@@ -123,6 +123,12 @@ public class Principal extends JFrame {
         // --- MENU VACUNAS ---
         JMenu menuVacunas = new JMenu("Vacunación");
         JMenuItem itemInventario = new JMenuItem("Gestión de Inventario");
+        itemInventario.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		GestionVacunasFrame ventanaVacunas = new GestionVacunasFrame();
+        		ventanaVacunas.setVisible(true);
+        	}
+        });
         itemReporteVacunas = new JMenuItem("Reporte de Cobertura");
 
         menuVacunas.add(itemInventario);

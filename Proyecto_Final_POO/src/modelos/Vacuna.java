@@ -18,6 +18,7 @@ public class Vacuna implements Serializable {
     private String descripcion;
     private String lote; // <--- NUEVO ATRIBUTO
     private boolean activa; 
+    private int cantidad;
     
     /**
      * Constructor completo de Vacuna (Actualizado con Lote)
@@ -26,29 +27,34 @@ public class Vacuna implements Serializable {
      * @param descripcion Descripción
      * @param lote Número de lote de fabricación
      */
-    public Vacuna(String codigo, String nombre, String descripcion, String lote) {
+    public Vacuna(String codigo, String nombre, String descripcion, String lote, int cantidadInicial) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.lote = lote;
+        this.cantidad = cantidadInicial;
         this.activa = true;
     }
 
-    /**
-     * Constructor de compatibilidad (Mantiene el código anterior funcionando)
-     * Asigna un lote por defecto.
-     */
-    public Vacuna(String codigo, String nombre, String descripcion) {
-        this(codigo, nombre, descripcion, "LOTE-STD"); // Lote por defecto
-    }
-    
+ 
     /**
      * Constructor simplificado
      */
     public Vacuna(String codigo, String nombre) {
-        this(codigo, nombre, "", "LOTE-STD");
+        this(codigo, nombre, "", "GENERICO", 0);
     }
     
+    public void agregarStock(int n) {
+        if (n > 0) this.cantidad += n;
+    }
+
+    public boolean descontarStock(int n) {
+        if (n > 0 && this.cantidad >= n) {
+            this.cantidad -= n;
+            return true;
+        }
+        return false;
+    }
     // ========== GETTERS Y SETTERS ==========
     
     public String getCodigo() {
@@ -93,6 +99,13 @@ public class Vacuna implements Serializable {
         this.activa = activa;
     }
     
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
     // ========== MÉTODOS DE NEGOCIO ==========
     
     public void desactivar() {
@@ -119,11 +132,7 @@ public class Vacuna implements Serializable {
         return codigo != null && codigo.equals(vacuna.codigo);
     }
     
-    @Override
-    public int hashCode() {
-        return codigo != null ? codigo.hashCode() : 0;
-    }
-    
+   
     @Override
     public String toString() {
         return String.format("[%s] %s (Lote: %s) %s", 
