@@ -7,11 +7,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.Socket;
 
+import controlador.ClinicaControladora;
+
 public class ClienteRespalda {
 
     public static void enviarRespaldo() {
         try {
-            File f = new File("empresa.dat");
+            File f = new File("clinica_datos.dat");
 
             // Si no existe, lo crea vacío
             if (!f.exists()) {
@@ -23,9 +25,10 @@ public class ClienteRespalda {
             // Ahora sí lo lee
             FileInputStream fis = new FileInputStream(f);
 
-            Socket socket = new Socket("localhost", 9950);
+            Socket socket = new Socket("localhost", 9911);
             DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
-
+            
+            ClinicaControladora.getInstance().guardarDatos();
             int b;
             while ((b = fis.read()) != -1) {
                 salida.write(b);

@@ -18,8 +18,8 @@ public class server extends Thread{
     public static void main(String[] args) {
 
         try {
-            ServerSocket serverSocket = new ServerSocket(9950);
-            System.out.println("Servidor iniciado en puerto 9950...");
+            ServerSocket serverSocket = new ServerSocket(9911);
+            System.out.println("Servidor iniciado en puerto 9911...");
 
             while (true) {
                 Socket cliente = serverSocket.accept();

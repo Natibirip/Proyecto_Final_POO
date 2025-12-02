@@ -97,7 +97,7 @@ public class ClinicaControladora implements Serializable {
             oos.writeObject(inventarioVacunas);
             oos.writeObject(enfermedadesVigiladas);
             oos.writeObject(listaEspecialidades);
-
+            
             oos.close();
             // System.out.println("Datos guardados correctamente."); // Descomentar para depurar
         } catch (IOException e) {
