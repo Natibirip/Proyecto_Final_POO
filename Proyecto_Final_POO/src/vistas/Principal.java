@@ -11,6 +11,13 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,6 +31,9 @@ public class Principal extends JFrame {
     private JMenuItem itemHistorialMedico;
     private JMenu menuAdministracion;
     private JMenu menuConsultas;
+    static Socket sfd =null;
+	static DataInputStream entradaSocket;
+	static DataOutputStream salidaSocket;
     
     // Panel de Dashboard (NUEVO)
     private JPanel panelDashboard;
@@ -68,7 +78,7 @@ public class Principal extends JFrame {
         menuArchivo.add(itemCerrarSesion);
         menuArchivo.addSeparator();
         menuArchivo.add(itemSalir);
-
+        menuArchivo.addSeparator();
         // --- MENU PACIENTES ---
         JMenu menuPacientes = new JMenu("Pacientes");
         JMenuItem itemNuevoPaciente = new JMenuItem("Registrar Paciente");
@@ -83,6 +93,7 @@ public class Principal extends JFrame {
         });
 
         menuPacientes.add(itemNuevoPaciente);
+        menuPacientes.addSeparator();
         menuPacientes.add(itemBuscarPaciente);
 
         // --- MENU CITAS ---
@@ -99,6 +110,7 @@ public class Principal extends JFrame {
         });
 
         menuCitas.add(itemAgendarCita);
+        menuCitas.addSeparator();
         menuCitas.add(itemVerAgenda);
 
         // --- MENU CONSULTAS ---
@@ -111,7 +123,9 @@ public class Principal extends JFrame {
         });
         
         menuConsultas.add(itemNuevaConsulta);
+        menuConsultas.addSeparator();
         menuConsultas.add(itemHistorialMedico);
+        
 
         // --- MENU VACUNAS ---
         JMenu menuVacunas = new JMenu("Vacunación");
@@ -132,9 +146,43 @@ public class Principal extends JFrame {
         });
         
         menuAdministracion.add(itemGestionarUsuarios);
-
+        menuAdministracion.addSeparator();
         // Agregar menús a la barra
         menuBar.add(menuArchivo);
+        
+        JMenuItem btnRespaldo = new JMenuItem("Respaldo");
+        btnRespaldo.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		try {
+    				sfd = new Socket("127.0.0.1", 7000);
+    				DataInputStream aux = new DataInputStream(new FileInputStream(new File("empresa.dat")));
+    				salidaSocket =  new DataOutputStream((sfd.getOutputStream()));
+    				int unbyte;
+    				
+    				try {
+    					while ((unbyte = aux.read()) != -1) {
+    						salidaSocket.write(unbyte);
+    						salidaSocket.flush();
+    						}
+    					}
+    					catch (IOException ioe) 
+    					{
+    						System.out.println("Error: "+ioe);
+    					}
+    					}	
+    					catch (UnknownHostException uhe) 
+    					{
+    						System.out.println("No se pudo acceder al servidor ");
+    						System.exit(1);
+    					} 
+    					catch (IOException ioe) {
+    						System.out.println("Comunicacion rechazada. ");
+    						System.exit(1);
+    					}
+    				}	
+        	
+        });
+        menuArchivo.add(btnRespaldo);
         menuBar.add(menuPacientes);
         menuBar.add(menuCitas);
         menuBar.add(menuConsultas);
