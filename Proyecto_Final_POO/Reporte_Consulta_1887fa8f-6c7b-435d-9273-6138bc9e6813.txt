@@ -1,0 +1,31 @@
+==========================================
+       REPORTE DE CONSULTA MÉDICA         
+==========================================
+ID Consulta: 1887fa8f-6c7b-435d-9273-6138bc9e6813
+Fecha: 01/12/2025 19:10
+------------------------------------------
+PACIENTE: pepe
+CÉDULA:   1111
+PESO:     130.0 kg
+------------------------------------------
+MÉDICO:   Dr. martin
+------------------------------------------
+
+[SÍNTOMAS]
+ta malito
+
+[DIAGNÓSTICO]
+tiene gripe
+
+[TRATAMIENTO / INDICACIONES]
+ibuprofeno cada 8h por 3 dias
+
+[ÓRDENES DE LAB]: ninguna.
+
+[LICENCIA MÉDICA]: 3 días.
+
+------------------------------------------
+
+
+Firma del Médico
+_________________________
