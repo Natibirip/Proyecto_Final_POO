@@ -5,9 +5,8 @@ import java.io.Serializable;
 /**
  * Clase que representa una vacuna disponible en la clínica.
  * Las vacunas son predefinidas por la administración de la clínica.
- * 
- * @author Equipo de Desarrollo
- * @version 1.0
+ * * @author Equipo de Desarrollo
+ * @version 1.1
  */
 public class Vacuna implements Serializable {
     
@@ -17,30 +16,37 @@ public class Vacuna implements Serializable {
     private String codigo;
     private String nombre;
     private String descripcion;
-    private boolean activa; // Si está disponible actualmente en la clínica
+    private String lote; // <--- NUEVO ATRIBUTO
+    private boolean activa; 
     
     /**
-     * Constructor completo de Vacuna
-     * 
-     * @param codigo Código único de la vacuna (ej: "VAC001")
-     * @param nombre Nombre de la vacuna (ej: "COVID-19")
-     * @param descripcion Descripción detallada de la vacuna
+     * Constructor completo de Vacuna (Actualizado con Lote)
+     * * @param codigo Código único
+     * @param nombre Nombre de la vacuna
+     * @param descripcion Descripción
+     * @param lote Número de lote de fabricación
      */
-    public Vacuna(String codigo, String nombre, String descripcion) {
+    public Vacuna(String codigo, String nombre, String descripcion, String lote) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.activa = true; // Por defecto está activa
+        this.lote = lote;
+        this.activa = true;
+    }
+
+    /**
+     * Constructor de compatibilidad (Mantiene el código anterior funcionando)
+     * Asigna un lote por defecto.
+     */
+    public Vacuna(String codigo, String nombre, String descripcion) {
+        this(codigo, nombre, descripcion, "LOTE-STD"); // Lote por defecto
     }
     
     /**
-     * Constructor simplificado sin descripción
-     * 
-     * @param codigo Código único de la vacuna
-     * @param nombre Nombre de la vacuna
+     * Constructor simplificado
      */
     public Vacuna(String codigo, String nombre) {
-        this(codigo, nombre, "");
+        this(codigo, nombre, "", "LOTE-STD");
     }
     
     // ========== GETTERS Y SETTERS ==========
@@ -68,6 +74,16 @@ public class Vacuna implements Serializable {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+    // --- NUEVOS MÉTODOS PARA LOTE ---
+    public String getLote() {
+        return lote;
+    }
+
+    public void setLote(String lote) {
+        this.lote = lote;
+    }
+    // --------------------------------
     
     public boolean isActiva() {
         return activa;
@@ -79,25 +95,14 @@ public class Vacuna implements Serializable {
     
     // ========== MÉTODOS DE NEGOCIO ==========
     
-    /**
-     * Desactiva la vacuna (ya no estará disponible para aplicar)
-     */
     public void desactivar() {
         this.activa = false;
     }
     
-    /**
-     * Reactiva la vacuna
-     */
     public void activar() {
         this.activa = true;
     }
     
-    /**
-     * Valida que los datos esenciales de la vacuna estén completos
-     * 
-     * @return true si es válida, false en caso contrario
-     */
     public boolean esValida() {
         return codigo != null && !codigo.trim().isEmpty() &&
                nombre != null && !nombre.trim().isEmpty();
@@ -121,18 +126,14 @@ public class Vacuna implements Serializable {
     
     @Override
     public String toString() {
-        return String.format("[%s] %s %s", 
+        return String.format("[%s] %s (Lote: %s) %s", 
                 codigo, 
-                nombre, 
-                activa ? "(Activa)" : "(Inactiva)");
+                nombre,
+                lote,
+                activa ? "" : "(Inactiva)");
     }
     
-    /**
-     * Representación compacta solo con el nombre (útil para checkboxes)
-     * 
-     * @return Nombre de la vacuna
-     */
     public String toStringSimple() {
-        return nombre;
+        return nombre + " - " + lote;
     }
 }

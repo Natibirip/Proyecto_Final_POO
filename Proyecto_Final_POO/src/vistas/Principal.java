@@ -110,6 +110,12 @@ public class Principal extends JFrame {
         menuConsultas = new JMenu("Consultas Médicas");
         itemNuevaConsulta = new JMenuItem("Realizar Consulta / Diagnóstico");
         itemHistorialMedico = new JMenuItem("Ver Historial Clínico");
+        itemHistorialMedico.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		VerHistorialFrame ventanaHistorial = new VerHistorialFrame(usuarioActual);
+        		ventanaHistorial.setVisible(true);
+        	}
+        });
         
         menuConsultas.add(itemNuevaConsulta);
         menuConsultas.add(itemHistorialMedico);
