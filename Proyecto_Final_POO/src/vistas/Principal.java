@@ -30,7 +30,6 @@ public class Principal extends JFrame {
     
     // Componentes del Menú
     private JMenuItem itemGestionarUsuarios;
-    private JMenuItem itemNuevaConsulta;
     private JMenuItem itemHistorialMedico;
     private JMenu menuAdministracion;
     private JMenu menuConsultas;
@@ -118,15 +117,11 @@ public class Principal extends JFrame {
 
         // --- MENU CONSULTAS ---
         menuConsultas = new JMenu("Consultas Médicas");
-        itemNuevaConsulta = new JMenuItem("Realizar Consulta / Diagnóstico");
         itemHistorialMedico = new JMenuItem("Ver Historial Clínico");
         itemHistorialMedico.addActionListener(e -> {
             VerHistorialFrame ventanaHistorial = new VerHistorialFrame(usuarioActual);
             ventanaHistorial.setVisible(true);
         });
-        
-        menuConsultas.add(itemNuevaConsulta);
-        menuConsultas.addSeparator();
         menuConsultas.add(itemHistorialMedico);
         
 
