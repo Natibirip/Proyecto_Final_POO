@@ -186,15 +186,66 @@ public class RegClientePrt2 extends JDialog {
         lblAlergias.setBounds(200, yOffset + 30, 127, 14);
         contentPanel.add(lblAlergias);
         
-        rdbtnNingunaA = new JRadioButton("Ninguna"); rdbtnNingunaA.setBounds(200, yOffset + 50, 100, 23); contentPanel.add(rdbtnNingunaA);
-        rdbtnAPolen = new JRadioButton("Polen"); rdbtnAPolen.setBounds(200, yOffset + 75, 100, 23); contentPanel.add(rdbtnAPolen);
-        rdbtnAAcaros = new JRadioButton("Acaros"); rdbtnAAcaros.setBounds(200, yOffset + 100, 100, 23); contentPanel.add(rdbtnAAcaros);
-        rdbtnApelaje = new JRadioButton("Pelaje"); rdbtnApelaje.setBounds(200, yOffset + 125, 100, 23); contentPanel.add(rdbtnApelaje);
-        rdbtnAmani = new JRadioButton("Mani"); rdbtnAmani.setBounds(200, yOffset + 150, 100, 23); contentPanel.add(rdbtnAmani);
-        rdbtnAnueses = new JRadioButton("Nueces"); rdbtnAnueses.setBounds(200, yOffset + 175, 100, 23); contentPanel.add(rdbtnAnueses);
-        rdbtnAabejas = new JRadioButton("Abejas"); rdbtnAabejas.setBounds(200, yOffset + 200, 100, 23); contentPanel.add(rdbtnAabejas);
+        rdbtnNingunaA = new JRadioButton("Ninguna"); 
+        rdbtnNingunaA.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		if(rdbtnNingunaA.isSelected()) {
+                	rdbtnAPolen.setSelected(false);
+                	rdbtnAAcaros.setSelected(false);
+                	rdbtnApelaje.setSelected(false);
+                	rdbtnAmani.setSelected(false);
+                	rdbtnAnueses.setSelected(false);
+                	
+                	txtalergiasExtra.setText("Extra...");
+                }
+        	}
+        });rdbtnNingunaA.setBounds(200, yOffset + 50, 100, 23); contentPanel.add(rdbtnNingunaA);
+        
+        rdbtnAPolen = new JRadioButton("Polen"); 
+        rdbtnAPolen.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		  desctivarBtnNingunaA();
+        	}
+        });rdbtnAPolen.setBounds(200, yOffset + 75, 100, 23); contentPanel.add(rdbtnAPolen);
+        rdbtnAAcaros = new JRadioButton("Acaros"); 
+        rdbtnAAcaros.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		 desctivarBtnNingunaA();
+        	}
+        });rdbtnAAcaros.setBounds(200, yOffset + 100, 100, 23); contentPanel.add(rdbtnAAcaros);
+        rdbtnApelaje = new JRadioButton("Pelaje"); 
+        rdbtnApelaje.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		 desctivarBtnNingunaA();
+        	}
+        });rdbtnApelaje.setBounds(200, yOffset + 125, 100, 23); contentPanel.add(rdbtnApelaje);
+        rdbtnAmani = new JRadioButton("Mani"); 
+        rdbtnAmani.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		 desctivarBtnNingunaA();
+        	}
+        });rdbtnAmani.setBounds(200, yOffset + 150, 100, 23); contentPanel.add(rdbtnAmani);
+        rdbtnAnueses = new JRadioButton("Nueces"); 
+        rdbtnAnueses.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		 desctivarBtnNingunaA();
+        	}
+        });rdbtnAnueses.setBounds(200, yOffset + 175, 100, 23); contentPanel.add(rdbtnAnueses);
+        rdbtnAabejas = new JRadioButton("Abejas"); 
+        rdbtnAabejas.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		desctivarBtnNingunaA();
+        	}
+        });rdbtnAabejas.setBounds(200, yOffset + 200, 100, 23); contentPanel.add(rdbtnAabejas);
         
         txtalergiasExtra = new JTextField("Extra...");
+        txtalergiasExtra.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		 if(txtalergiasExtra.getText() != "Extra...") {
+        			 desctivarBtnNingunaA();
+        		 }
+        	}
+        });
         txtalergiasExtra.setBounds(200, yOffset + 230, 128, 20);
         contentPanel.add(txtalergiasExtra);
 
@@ -203,15 +254,65 @@ public class RegClientePrt2 extends JDialog {
         lblEnfermedades.setBounds(400, yOffset + 30, 180, 14);
         contentPanel.add(lblEnfermedades);
         
-        rdbtnNingunaE = new JRadioButton("Ninguna"); rdbtnNingunaE.setBounds(400, yOffset + 50, 109, 23); contentPanel.add(rdbtnNingunaE);
-        rdbtnEanemia = new JRadioButton("Anemia"); rdbtnEanemia.setBounds(400, yOffset + 75, 109, 23); contentPanel.add(rdbtnEanemia);
-        rdbtnEhemofilia = new JRadioButton("Hemofilia"); rdbtnEhemofilia.setBounds(400, yOffset + 100, 109, 23); contentPanel.add(rdbtnEhemofilia);
-        rdbtnEdistroMuscular = new JRadioButton("Distrofia"); rdbtnEdistroMuscular.setBounds(400, yOffset + 125, 138, 23); contentPanel.add(rdbtnEdistroMuscular);
-        rdbtnEtalasemia = new JRadioButton("Talasemia"); rdbtnEtalasemia.setBounds(400, yOffset + 150, 109, 23); contentPanel.add(rdbtnEtalasemia);
-        rdbtnEfibrosis = new JRadioButton("Fibrosis"); rdbtnEfibrosis.setBounds(400, yOffset + 175, 109, 23); contentPanel.add(rdbtnEfibrosis);
-        rdbtnEhipercolesterol = new JRadioButton("Hipercolesterol"); rdbtnEhipercolesterol.setBounds(400, yOffset + 200, 138, 23); contentPanel.add(rdbtnEhipercolesterol);
+        rdbtnNingunaE = new JRadioButton("Ninguna"); 
+        rdbtnNingunaE.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		if(rdbtnNingunaE.isSelected()) {
+                	rdbtnEanemia.setSelected(false);
+                	rdbtnEhemofilia.setSelected(false);
+                	rdbtnEhemofilia.setSelected(false);
+                	rdbtnEdistroMuscular.setSelected(false);
+                	rdbtnEtalasemia.setSelected(false);
+                	rdbtnEfibrosis.setSelected(false);
+                	rdbtnEhipercolesterol.setSelected(false);
+                	txtenfermedadesExtra.setText("Extra...");
+                }
+        	}
+        });rdbtnNingunaE.setBounds(400, yOffset + 50, 109, 23); contentPanel.add(rdbtnNingunaE);
+        
+        rdbtnEanemia = new JRadioButton("Anemia"); 
+        rdbtnEanemia.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		desctivarBtnNingunaE();
+        	}
+        });rdbtnEanemia.setBounds(400, yOffset + 75, 109, 23); contentPanel.add(rdbtnEanemia);
+        rdbtnEhemofilia = new JRadioButton("Hemofilia"); 
+        rdbtnEhemofilia.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		desctivarBtnNingunaE();
+        	}
+        });rdbtnEhemofilia.setBounds(400, yOffset + 100, 109, 23); contentPanel.add(rdbtnEhemofilia);
+        rdbtnEdistroMuscular = new JRadioButton("Distrofia"); 
+        rdbtnEdistroMuscular.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		desctivarBtnNingunaE();
+        	}
+        });rdbtnEdistroMuscular.setBounds(400, yOffset + 125, 138, 23); contentPanel.add(rdbtnEdistroMuscular);
+        rdbtnEtalasemia = new JRadioButton("Talasemia"); 
+        rdbtnEtalasemia.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		desctivarBtnNingunaE();
+        	}
+        });rdbtnEtalasemia.setBounds(400, yOffset + 150, 109, 23); contentPanel.add(rdbtnEtalasemia);
+        rdbtnEfibrosis = new JRadioButton("Fibrosis"); 
+        rdbtnEfibrosis.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		desctivarBtnNingunaE();
+        	}
+        });rdbtnEfibrosis.setBounds(400, yOffset + 175, 109, 23); contentPanel.add(rdbtnEfibrosis);
+        rdbtnEhipercolesterol = new JRadioButton("Hipercolesterol"); 
+        rdbtnEhipercolesterol.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		desctivarBtnNingunaE();
+        	}
+        });rdbtnEhipercolesterol.setBounds(400, yOffset + 200, 138, 23); contentPanel.add(rdbtnEhipercolesterol);
         
         txtenfermedadesExtra = new JTextField("Extra...");
+        txtenfermedadesExtra.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		desctivarBtnNingunaE();
+        	}
+        });
         txtenfermedadesExtra.setBounds(400, yOffset + 230, 128, 20);
         contentPanel.add(txtenfermedadesExtra);
 
@@ -231,6 +332,16 @@ public class RegClientePrt2 extends JDialog {
     private void registrar() {
         try {
             // 1. Validaciones básicas
+        	if(rdbtnNingunaA.isSelected()) {
+        		if(txtalergiasExtra.getText() != "Extra...") {
+        			desctivarBtnNingunaA();
+        		}
+        	}
+        	if(rdbtnNingunaE.isSelected()) {
+        		if(txtenfermedadesExtra.getText() != "Extra...") {
+        			desctivarBtnNingunaE();
+        		}
+        	}
             if (txtNombre.getText().isEmpty() || txtCedula.getText().isEmpty() || txtTelefono.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Complete Nombre, Cédula y Teléfono");
                 return;
@@ -314,4 +425,14 @@ public class RegClientePrt2 extends JDialog {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
     }
+     void desctivarBtnNingunaA(){
+    	if(rdbtnNingunaA.isSelected()) {
+    		rdbtnNingunaA.setSelected(false);
+    	}
+    }
+     void desctivarBtnNingunaE(){
+     	if(rdbtnNingunaE.isSelected()) {
+     		rdbtnNingunaE.setSelected(false);
+     	}
+     }
 }
