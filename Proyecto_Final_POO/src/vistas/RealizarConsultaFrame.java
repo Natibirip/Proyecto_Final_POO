@@ -55,7 +55,7 @@ public class RealizarConsultaFrame extends JFrame {
         setTitle("Consulta Médica - Dr. " + medico.getNombre() + " atendiendo a " + paciente.getNombre());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout(10, 10));
+        getContentPane().setLayout(new BorderLayout(10, 10));
 
         // 1. PANEL SUPERIOR
         crearPanelInfoPaciente();
@@ -109,7 +109,14 @@ public class RealizarConsultaFrame extends JFrame {
         panelInfo.add(new JLabel("Tipo Sangre: " + paciente.getTipoSangre()));
         panelInfo.add(new JLabel("")); 
 
-        add(panelInfo, BorderLayout.NORTH);
+        getContentPane().add(panelInfo, BorderLayout.NORTH);
+        String textoEnfermedades = "Ninguna";
+        if (paciente.getEnfermedades() != null && !paciente.getEnfermedades().isEmpty()) {
+        	textoEnfermedades = paciente.getAlergias().toString();
+        }
+        JLabel lblEnfermedades = new JLabel("enfermedades:" +textoEnfermedades);
+        lblEnfermedades.setForeground(Color.RED);
+        panelInfo.add(lblEnfermedades);
     }
 
     private void crearPanelHistorial() {
@@ -133,7 +140,7 @@ public class RealizarConsultaFrame extends JFrame {
         cargarHistorialFiltrado();
 
         panelHistorial.add(new JScrollPane(tablaHistorial), BorderLayout.CENTER);
-        add(panelHistorial, BorderLayout.WEST);
+        getContentPane().add(panelHistorial, BorderLayout.WEST);
     }
 
     private void cargarHistorialFiltrado() {
@@ -201,7 +208,7 @@ public class RealizarConsultaFrame extends JFrame {
         panelLicencia.add(spinLicencia);
         panelCentral.add(panelLicencia);
 
-        add(panelCentral, BorderLayout.CENTER);
+        getContentPane().add(panelCentral, BorderLayout.CENTER);
     }
 
     private void crearPanelAcciones() {
@@ -260,7 +267,7 @@ public class RealizarConsultaFrame extends JFrame {
         btnImprimir.addActionListener(e -> imprimirReceta());
         panelDerecho.add(btnImprimir);
         
-        add(panelDerecho, BorderLayout.EAST);
+        getContentPane().add(panelDerecho, BorderLayout.EAST);
     }
 
     private void crearBotonera() {
@@ -277,7 +284,7 @@ public class RealizarConsultaFrame extends JFrame {
 
         panelBotones.add(btnCancelar);
         panelBotones.add(btnFinalizar);
-        add(panelBotones, BorderLayout.SOUTH);
+        getContentPane().add(panelBotones, BorderLayout.SOUTH);
     }
 
     // --- LÓGICA DE NEGOCIO ---
