@@ -30,7 +30,6 @@ public class Principal extends JFrame {
     
     // Componentes del Menú
     private JMenuItem itemGestionarUsuarios;
-    private JMenuItem itemNuevaConsulta;
     private JMenuItem itemHistorialMedico;
     private JMenu menuAdministracion;
     private JMenu menuConsultas;
@@ -40,6 +39,8 @@ public class Principal extends JFrame {
     
     // Panel de Dashboard (NUEVO)
     private JPanel panelDashboard;
+    private JMenu menuVacunas;
+    private JMenu mnEnfermedades;
 
     public Principal(Usuario usuario) {
         this.usuarioActual = usuario;
@@ -85,11 +86,17 @@ public class Principal extends JFrame {
         // --- MENU PACIENTES ---
         JMenu menuPacientes = new JMenu("Pacientes");
         JMenuItem itemNuevoPaciente = new JMenuItem("Registrar Paciente");
+        if(usuarioActual.getRol().equals(RolUsuario.SECRETARIA)) {
+        	itemNuevoPaciente.setEnabled(false);
+        }
         itemNuevoPaciente.addActionListener(e -> {
             RegClientePrt2 ventanaCliente = new RegClientePrt2();
             ventanaCliente.setVisible(true);
         });
         JMenuItem itemBuscarPaciente = new JMenuItem("Buscar / Editar Paciente");
+        if(usuarioActual.getRol().equals(RolUsuario.SECRETARIA)) {
+        	itemBuscarPaciente.setEnabled(false);
+        }
         itemBuscarPaciente.addActionListener(e -> {
             BuscarPacientesFrame listaPaciente = new BuscarPacientesFrame();
             listaPaciente.setVisible(true);
@@ -102,6 +109,9 @@ public class Principal extends JFrame {
         // --- MENU CITAS ---
         JMenu menuCitas = new JMenu("Citas");
         JMenuItem itemAgendarCita = new JMenuItem("Agendar Nueva Cita");
+        if(usuarioActual.getRol().equals(RolUsuario.MEDICO)) {
+        	itemAgendarCita.setEnabled(false);
+        }
         itemAgendarCita.addActionListener(e -> {
             RegCita ventanaCita = new RegCita(null);
             ventanaCita.setVisible(true);
@@ -118,21 +128,29 @@ public class Principal extends JFrame {
 
         // --- MENU CONSULTAS ---
         menuConsultas = new JMenu("Consultas Médicas");
-        itemNuevaConsulta = new JMenuItem("Realizar Consulta / Diagnóstico");
         itemHistorialMedico = new JMenuItem("Ver Historial Clínico");
+        if(usuarioActual.getRol().equals(RolUsuario.SECRETARIA)) {
+        	itemHistorialMedico.setEnabled(false);
+        }
         itemHistorialMedico.addActionListener(e -> {
             VerHistorialFrame ventanaHistorial = new VerHistorialFrame(usuarioActual);
             ventanaHistorial.setVisible(true);
         });
+<<<<<<< HEAD
         
         menuConsultas.add(itemNuevaConsulta);
         menuConsultas.addSeparator();
+=======
+>>>>>>> refs/remotes/origin/master
         menuConsultas.add(itemHistorialMedico);
         
 
         // --- MENU VACUNAS ---
-        JMenu menuVacunas = new JMenu("Vacunación");
+        menuVacunas = new JMenu("Vacunación");
         JMenuItem itemInventario = new JMenuItem("Gestión de Inventario");
+        if(usuarioActual.getRol().equals(RolUsuario.SECRETARIA)) {
+        	itemInventario.setEnabled(false);
+        }
         itemInventario.addActionListener(e -> {
             GestionVacunasFrame ventanaVacunas = new GestionVacunasFrame();
             ventanaVacunas.setVisible(true);
@@ -142,7 +160,11 @@ public class Principal extends JFrame {
 
         // --- MENU ADMINISTRACIÓN ---
         menuAdministracion = new JMenu("Administración");
+        
         itemGestionarUsuarios = new JMenuItem("Gestionar Usuarios y Roles");
+        if(usuarioActual.getRol().equals(RolUsuario.SECRETARIA) || usuarioActual.getRol().equals(RolUsuario.MEDICO)) {
+        	itemGestionarUsuarios.setEnabled(false);
+        }
         itemGestionarUsuarios.addActionListener(e -> {
             GestionUsuariosFrame ventanaUsuarios = new GestionUsuariosFrame();
             ventanaUsuarios.setVisible(true);
@@ -176,10 +198,13 @@ public class Principal extends JFrame {
         menuBar.add(menuConsultas);
         menuBar.add(menuVacunas);
         
-        JMenu mnEnfermedades = new JMenu("Enfermedades");
+        mnEnfermedades = new JMenu("Enfermedades");
         menuBar.add(mnEnfermedades);
         
         JMenuItem mntmEnfermedadesBajoVigilancia = new JMenuItem("Enfermedades bajo vigilancia");
+        if(usuarioActual.getRol().equals(RolUsuario.SECRETARIA)) {
+        	mntmEnfermedadesBajoVigilancia.setEnabled(false);
+        }
         mntmEnfermedadesBajoVigilancia.addActionListener(e -> {
             GestionEnfermedadesFrame ventanaEnfermedades = new GestionEnfermedadesFrame();
             ventanaEnfermedades.setVisible(true);
@@ -188,8 +213,11 @@ public class Principal extends JFrame {
         
         JMenu mnReportes = new JMenu("Reportes");
         menuBar.add(mnReportes);
-        
+       
         JMenuItem mntmReportesConsultas = new JMenuItem("Reportes consultas");
+        if(usuarioActual.getRol().equals(RolUsuario.SECRETARIA)) {
+        	mntmReportesConsultas.setEnabled(false);
+        }
         mntmReportesConsultas.addActionListener(e -> {
             ReportesGraficosFrame ventanaReportes = new ReportesGraficosFrame();
             ventanaReportes.setVisible(true);
@@ -198,6 +226,9 @@ public class Principal extends JFrame {
         menuBar.add(menuAdministracion);
         
         JMenuItem mntmGestionarPersonal = new JMenuItem("Gestionar Personal");
+        if(usuarioActual.getRol().equals(RolUsuario.SECRETARIA) || usuarioActual.getRol().equals(RolUsuario.MEDICO)) {
+        	mntmGestionarPersonal.setEnabled(false);
+        }
         mntmGestionarPersonal.addActionListener(e -> {
             GestionPersonalFrame ventanaPersonal = new GestionPersonalFrame();
             ventanaPersonal.setVisible(true);
@@ -256,9 +287,14 @@ public class Principal extends JFrame {
         if (rol == RolUsuario.SECRETARIA) {
             menuConsultas.setVisible(false);
             menuAdministracion.setVisible(false);
+            menuVacunas.setVisible(false);
+            menuConsultas.setVisible(true);
+            mnEnfermedades.setVisible(true);
+            
         } else if (rol == RolUsuario.MEDICO) {
             menuAdministracion.setVisible(false);
             menuConsultas.setVisible(true);
+           
         }
     }
 
