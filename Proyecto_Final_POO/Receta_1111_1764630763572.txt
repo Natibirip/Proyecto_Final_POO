@@ -1,0 +1,17 @@
+====== CENTRO MÉDICO ======
+Dr. martin | Cardiología
+Fecha: Mon Dec 01 19:12:43 BOT 2025
+--------------------------------
+PACIENTE: pepe
+PESO ACTUAL: 130.0kg
+--------------------------------
+
+DIAGNÓSTICO:
+
+
+INDICACIONES:
+
+
+
+__________________________
+Firma del Médico

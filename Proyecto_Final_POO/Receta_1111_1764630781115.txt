@@ -1,0 +1,17 @@
+====== CENTRO MÉDICO ======
+Dr. martin | Cardiología
+Fecha: Mon Dec 01 19:13:01 BOT 2025
+--------------------------------
+PACIENTE: pepe
+PESO ACTUAL: 130.0kg
+--------------------------------
+
+DIAGNÓSTICO:
+
+
+INDICACIONES:
+ibuprofeno cada 8h
+
+
+__________________________
+Firma del Médico
